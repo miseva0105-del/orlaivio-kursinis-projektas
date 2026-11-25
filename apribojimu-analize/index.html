@@ -1,0 +1,197 @@
+<!doctype html><html lang="lt"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Projektinių apribojimų analizė</title>
+<style>*{box-sizing:border-box}body{margin:0;background:#f5f8fc;color:#20384a;font:16px/1.55 system-ui}main{max-width:1150px;margin:auto;padding:20px}header,section{background:white;border:1px solid #d6e2ef;border-radius:12px;margin-bottom:16px;padding:20px}header{background:#eaf2fb;border-left:5px solid #377ac1}h1,h2,h3{color:#1e4f7a;margin-top:0}button{background:#2868a5;border:0;color:white;padding:8px 14px;border-radius:8px;cursor:pointer;font:inherit}input,select{font:inherit;padding:5px;border:1px solid #a8bed0;border-radius:5px}input[type=number]{width:110px}label{display:inline-block;margin:6px}fieldset{border:1px solid #d6e2ef;margin:12px 0}canvas{width:100%;height:auto}table{border-collapse:collapse;width:100%}td,th{padding:7px;text-align:left;border-bottom:1px solid #d6e2ef}details{background:#eef5fc;padding:12px;border-radius:8px;margin:10px 0}summary{cursor:pointer;font-weight:600}a{color:#245e91}pre{white-space:pre-wrap}.scroll{overflow:auto}.note{background:#eef5fc;padding:12px}.tools{display:flex;gap:8px;flex-wrap:wrap}</style>
+<main><header><h1>Projektinių apribojimų analizė</h1><p>Pradinis sparno ploto ir jėgainės galios parinkimas sraigtiniam lėktuvui</p></header>
+<section><h2>1. Nuo reikalavimų iki skaičiavimo įvesties</h2><ol>
+<li><a href="https://miseva0105-del.github.io/orlaivio-kursinis-projektas/">Projektavimo reikalavimų vedlys</a>. Iš lentelės perkelkite skaitines ribas ir jų ID. Patikrinkite, ar kilimo reikalavimas apibrėžia įsibėgėjimo kelią, ar atstumą iki kliūties.</li>
+<li><a href="https://miseva0105-del.github.io/orlaivio-kursinis-projektas/amfibija-etapais/">Amfibijos misijos demonstratorius</a>. Iš misijos perkelkite kreiserinį tikrąjį oro greitį, tankį tame aukštyje, aukštėjimo greitį ir pasirinktą aukštėjimo TAS. Misijos skaičiai apibrėžia režimus. Reikalavimų lentelėje nurodykite, kurios jų reikšmės privalomos.</li>
+<li><strong>Analogų analizės demonstratorius</strong>. Įkelkite jo JSON. Iš masės ir sparno ploto apskaičiuojamas analogų W/S. Galios taškai rodomi tik pasirinkus analogus, kurių galios rūšis ir atskaita sutampa su diagrama. Sparno proilgį galite perkelti į savo projektą, jei analogas tinkamas.</li>
+</ol><label>Reikalavimų ID ir įvesties šaltiniai <input id="refs" size="42" placeholder="Pvz., R-03, R-05, misijos etapas M-04"></label>
+<label>Analogų analizės JSON <input id="analog-file" type="file" accept=".json,application/json"></label><p id="import-status" role="status"></p><div id="analog-rows"></div></section>
+<section><h2>2. Pasirinkite atvejį ir reikalavimus</h2><div class="tools"><button data-case="cessna">Cessna 162 · Gudmundssono skaičiavimo pavyzdys</button><button data-case="amphib">Amfibija · mokomasis atvejis</button><button data-case="own">Mano projektas · pradinės reikšmės</button></div><p id="case-note"></p><details open><summary>Prieš skaičiuojant · ką rodo apribojimų diagrama?</summary><p>Vienas taškas reiškia vieną sparno apkrovos ir galios derinį. Kai masė žinoma, judant į dešinę sparno plotas mažėja, nes S = W/(W/S). Kiekviena kreivė rodo mažiausią galią, kurios konkrečiai sparno apkrovai reikia vienam reikalavimui įvykdyti. Tinka sritis virš visų galios kreivių ir kairiau didžiausios leistinos sparno apkrovos ribos. Diagrama leidžia palyginti kelis tinkamus projektinius taškus pagal sparno plotą, jėgainės galią ir atsargas.</p></details>
+<details open><summary>Kaip surinkti ir pagrįsti skaitinius duomenis?</summary><div id="input-provenance"></div>
+<p><b>C<sub>D0</sub></b> yra pasipriešinimo koeficientas ties nuline keliamąja jėga šioje supaprastintoje poliarėje. „Cessna 162“ reikšmė 0,0333 yra Gudmundssono pavyzdžio prielaida. Savo projektui naudokite palyginamos konfigūracijos poliarę arba sudėkite komponentų indėlius: C<sub>D0</sub> ≈ Σ(C<sub>f</sub>·FF·Q·S<sub>wet</sub>/S) + ΔC<sub>D0</sub>. Čia C<sub>f</sub> – trinties koeficientas, FF – formos koeficientas, Q – sąveikos koeficientas, S<sub>wet</sub> – aptekamo paviršiaus plotas, o ΔC<sub>D0</sub> – papildomi indėliai. Amfibijai atskirai vertinkite plūdžių, laiptuoto dugno ir važiuoklės įtaką pagal pasirinktą konfigūraciją. Palyginkite pradinį ir du alternatyvius įverčius. <a href="https://www.nasa.gov/reference/openvsp-parasite-drag-tool/">NASA OpenVSP · komponentų metodas</a></p>
+<p><b>Projektinis W/S.</b> „Cessna 162“ 10 lbf/ft² (478,8 N/m²) yra diagramos nagrinėjimo taškas. Šaltinio faktinis pavyzdžio santykis 1320 lbf / 120 ft² = 11 lbf/ft² (526,7 N/m²). Savo projektui pradėkite nuo palyginamų analogų intervalo, patikrinkite smukos ir kitas W/S ribas, tada palyginkite sparno plotą bei galios atsargą lentelėje. Jei reikia, spauskite „Perkelti W/S“ prie tinkamo analogo.</p></details><details open><summary>Mini skaičiavimai · kaip parengti įvestis</summary><p>Kiekvienoje grupėje parodyta, kaip nuo pradinio duomens pereiti prie įvesties. Pavyzdžių skaičiai skirti mokymuisi. Savo projekte prie kiekvieno dydžio įrašykite šaltinį, konfigūraciją, režimą ir vienetus. Jei dydis dar nenustatytas, pasirinkite pagrįstą intervalą ir patikrinkite, kaip keičiasi rezultatas.</p><div id="mini-calculations"></div></details><div id="inputs"></div>
+<h3>Skaičiavimo metodika ir formulės</h3>
+<details open><summary>1. Bendrieji dydžiai</summary>
+<p><b>W = mg</b>, <b>X = W/S</b>, <b>q = ρV²/2</b>, <b>K = 1/(πeAR)</b>. Čia m – projektinė masė (kg), g = 9,80665 m/s², W – svoris (N), S – sparno plotas (m²), X – sparno apkrova (N/m²), ρ – režimo oro tankis (kg/m³), V – tikrasis oro greitis (m/s), q – dinaminis slėgis (Pa), AR – sparno proilgis, e – Osvaldo koeficientas. Jeigu žinomas sparno mostas b, <b>AR = b²/S</b>. Lyginimo taškuose analogų sparno apkrova skaičiuojama kaip <b>X<sub>a</sub> = m<sub>a</sub>g/S<sub>a</sub></b>.</p>
+<p>Priimama parabolinė pasipriešinimo poliarė <b>C<sub>D</sub> = C<sub>D0</sub> + KC<sub>L</sub>²</b>. Kai apkrovos koeficientas yra n, <b>C<sub>L</sub> ≈ nX/q</b>, todėl <b>D/W ≈ qC<sub>D0</sub>/X + Kn²X/q</b>. D – pasipriešinimo jėga. Modelyje tuo pačiu W remiamasi visuose režimuose.</p></details>
+<details open><summary>2. Traukos ir svorio santykis pagal režimus</summary>
+<div class="scroll"><table><thead><tr><th>Režimas</th><th>Reikalingas T/W</th><th>Taikymo sąlyga</th></tr></thead><tbody>
+<tr><td>Kreiserinis skrydis</td><td>qC<sub>D0</sub>/X + KX/q</td><td>Pastovus greitis ir aukštis. Naudojami kreiseriniai ρ ir V.</td></tr>
+<tr><td>Aukštėjimas</td><td>qC<sub>D0</sub>/X + KX/q + V<sub>z</sub>/V</td><td>V<sub>z</sub> – aukštėjimo greitis (m/s). Priimamas nedidelis trajektorijos kampas ir pastovus TAS.</td></tr>
+<tr><td>Nusistovėjęs horizontalus posūkis</td><td>qC<sub>D0</sub>/X + Kn²X/q, &nbsp; n = 1/cos φ</td><td>φ – posvyrio kampas. Demonstratoriuje naudojami kreiserinio režimo TAS, tankis ir galios perskaičiavimo koeficientai.</td></tr>
+<tr><td>Įsibėgėjimas sausumoje</td><td>1,21X/(gρC<sub>L,max,TO</sub>s<sub>G</sub>) + 0,605(C<sub>D,TO</sub> − μC<sub>L,TO</sub>)/C<sub>L,max,TO</sub> + μ</td><td>s<sub>G</sub> – įsibėgėjimo kelias (m), μ – riedėjimo koeficientas, C<sub>L,TO</sub> ir C<sub>D,TO</sub> – riedos keliamosios jėgos ir pasipriešinimo koeficientai. V<sub>S,TO</sub> = √[2X/(ρC<sub>L,max,TO</sub>)], o V<sub>LOF</sub> ≈ 1,1V<sub>S,TO</sub>.</td></tr>
+<tr><td>Praktinės lubos</td><td>qC<sub>D0</sub>/X + KX/q + V<sub>z,lub</sub>/V<sub>lub</sub></td><td>Naudojamas tankis, TAS ir nustatytas likutinis aukštėjimo greitis praktinių lubų aukštyje.</td></tr>
+</tbody></table></div>
+<p><b>„Cessna 162“ kontrolinis atvejis.</b> X<sub>imp</sub> = X/47,88026 išreiškiamas lbf/ft². Jūros lygyje V<sub>Y</sub> = 0,514444(43,591 + 2,2452X<sub>imp</sub>) m/s. Kai σ = ρ/ρ₀, lubų TAS šiame modelyje V<sub>lub</sub> = V<sub>Y</sub>/√σ. Kitam atvejui naudojami įvesti TAS.</p></details>
+<details open><summary>3. Nuo traukos iki variklio galios</summary>
+<p><b>Traukos galia</b> P<sub>T</sub> = TV, kai T = (T/W)W. <b>Sraigto veleno mechaninė galia</b> P<sub>sraigto</sub> = TV/η<sub>p</sub>. Koeficientas η<sub>p</sub> apibūdina sraigtą tame darbo taške. <b>Variklio mechaninė išėjimo galia</b> P<sub>var,mech</sub> = P<sub>sraigto</sub>/η<sub>perd</sub>, kur η<sub>perd</sub> – mechaninės pavaros naudingumo koeficientas. Tiesioginei pavarai, kai jungties nuostoliai nepaisomi, abi mechaninės galios sutampa.</p>
+<p><b>Elektrinis variklis</b> taip pat atiduoda mechaninę galią per veleną. Jo elektrinė įėjimo galia P<sub>var,el</sub> = P<sub>var,mech</sub>/η<sub>var</sub>. Jei variklį maitina keitiklis, jo nuolatinės srovės įėjime P<sub>DC</sub> = P<sub>var,el</sub>/η<sub>keit</sub>. Tai galia keitiklio įėjime. Akumuliatoriaus energijai įvertinti dar reikia misijos trukmių, kitų elektros vartotojų ir atitinkamų nuostolių.</p>
+<p><b>Skaitinis pavyzdys.</b> Kai T = 900 N, V = 50 m/s ir η<sub>p</sub> = 0,75, gauname P<sub>T</sub> = 45 kW ir P<sub>sraigto</sub> = 60 kW. Esant tiesioginei pavarai, elektrinis variklis atiduoda 60 kW mechaninės galios. Jei η<sub>var</sub> = 0,94, variklio elektriniame įėjime reikia 63,8 kW. Kai η<sub>keit</sub> = 0,97, keitiklio nuolatinės srovės įėjime reikia 65,8 kW. Koeficientai šiame pavyzdyje yra mokomosios prielaidos.</p>
+<p><b>Diagramos atskaita.</b> Demonstratoriuje α<sub>i</sub> = P<sub>sraigto,prieinama,i</sub>/P<sub>sraigto,prieinama,0</sub>. Todėl i režimui <b>P<sub>0,i</sub> = (T/W)<sub>i</sub>WV<sub>i</sub>/(1000η<sub>p,i</sub>α<sub>i</sub>)</b> kW. „Cessna 162“ stūmoklinio variklio atvejui taikoma α = 1,132(ρ/ρ₀) − 0,132, kai ρ₀ = 1,225 kg/m³. Elektros jėgainei α parinkite pagal variklio, keitiklio ir aušinimo ribas tame režime. Pradiniame įvertyje α = 1 reiškia prielaidą, kad prieinama mechaninė galia išlieka tokia pati kaip atskaitos sąlygomis.</p>
+<p>Esant V = 0, sandauga TV lygi nuliui. Statinei traukai ir veleno galiai nustatyti naudokite sraigto statines charakteristikas. Įsibėgėjimo galios aproksimacijoje η<sub>p</sub> taikomas ties atsiplėšimo nuo tako greičiu.</p></details>
+<details open><summary>4. Sparno apkrovos ribos ir projektinis taškas</summary>
+<p><b>Smuka tiesiame skrydyje.</b> X<sub>max,S</sub> = ρ<sub>S</sub>V<sub>S,max</sub>²C<sub>L,max</sub>/2. <b>Smuka posūkyje.</b> X<sub>max,pos</sub> = qC<sub>L,max,pos</sub>/n. Tiesioginei tūpimo ribai naudojamas įvestas X<sub>max,tūp</sub>. Bendra riba <b>X<sub>max</sub> = min(X<sub>max,S</sub>, X<sub>max,pos</sub>, X<sub>max,tūp</sub>)</b>, įtraukiant tik aktyvias ribas.</p>
+<p><b>Galios gaubtinė</b> P<sub>0,reik</sub>(X) = max<sub>i</sub> P<sub>0,i</sub>(X). T/W diagramoje atskirai naudojama max<sub>i</sub>(T/W)<sub>i</sub>. Taškas tenkina įtrauktus apribojimus, kai X ≤ X<sub>max</sub> ir P<sub>0,pasir</sub> ≥ P<sub>0,reik</sub>(X). <b>Sparno plotas</b> S = W/X. <b>Galios atsarga</b> ΔP = P<sub>0,pasir</sub> − P<sub>0,reik</sub>. Jautrumo eilutėje skaičiuojama ties 0,9X, X ir 1,1X.</p>
+<p>Analogas, kurio veleno galios atskaita sutampa su diagramos atskaita, rodomas pagal <b>P<sub>a,persk</sub> = P<sub>a</sub>m/m<sub>a</sub></b>. Taip išlaikomas analogo galios ir svorio santykis, o diagramos galios ašis išreiškiama projekto masei.</p></details></section>
+<section><h2>3. Apribojimų diagrama ir projektinis taškas</h2><p>Projektinio taško galia turi siekti didžiausią iš pasirinktoje sparno apkrovoje apskaičiuotų režimų galių. Vertikalios ribos nustato didžiausią leistiną W/S. Lentelėje matyti, kuri riba lemia galią.</p><p id="error" role="status"></p><canvas id="chart" width="1040" height="475" aria-label="Jėgainės galios ir sparno apkrovos diagrama"></canvas><div id="result" aria-live="polite"></div><div class="scroll"><table id="regimes"></table></div><p id="sensitivity"></p><div id="candidates" class="scroll"></div><p id="cd-sensitivity"></p><div class="tools"><button id="save">Išsaugoti projektą JSON</button><button id="csv">Atsisiųsti režimų lentelę CSV</button><label>Atkurti projektą <input id="restore" type="file" accept=".json,application/json"></label></div></section>
+<section><h2>4. Kontrolė ir šaltiniai</h2><details open><summary>Cessna 162 kontrolinis pjūvis</summary><p>„Cessna 162“ skaičiavimo atvejis perimtas iš Purdue AAE 451 perskaičiavimo pagal Gudmundssono 2022 m. antrąjį leidimą. Pridėtame 2014 m. leidime 3–1 pavyzdys (p. 64–65) skirtas kitam, 2000 lbf projektinio svorio lėktuvui. Jo pradiniai duomenys su „Cessna 162“ duomenimis nesiejami. Esant W/S = 10 lbf/ft² ≈ 478,8 N/m², kontrolinės T/W reikšmės apytiksliai yra 0,187 (įsibėgėjimas), 0,214 (aukštėjimas), 0,125 (posūkis), 0,119 (kreiserinis) ir 0,094 (praktinės lubos). Tūpimo riba ≈ 544,4 N/m². Dinaminis slėgis ir greičiai perskaičiuoti į SI. Kontroliniame taške pagal galią lemiamas posūkis, o pagal T/W – aukštėjimas.</p></details><details><summary>Užklausa skaičiavimams atkartoti</summary><pre id="prompt">Naudodamas mano reikalavimų ID ir įvesties lentelę, sukurk Google Colab Python skaičiavimą SI vienetais. Nubraižyk atskiras režimų kreives ir jų viršutinę gaubtinę, pažymėk W/S ribą ir projektinį tašką. Kiekvienam režimui atskirai perskaičiuok trauką į veleno galią pagal TAS, sraigto naudingumo koeficientą ir galios prieinamumo dalį. Palygink projektinio taško rezultatą su kontroliniu HTML skaičiavimu. Trūkstamus duomenis pažymėk. Nurodyk, kuris apribojimas lemia galią ir kaip išvada keičiasi keičiant W/S.</pre><button id="copy">Kopijuoti užklausą</button><span id="copy-state" role="status"></span></details><ul><li><a href="https://www.oreilly.com/library/view/general-aviation-aircraft/9780123973085/xhtml/CHP003.html">Gudmundsson, General Aviation Aircraft Design, 3 skyrius, §3.2 Constraint Analysis</a></li><li><a href="https://thiagopurdue.github.io/AAE451_Advanced_Design_Notes/constraint-examples/">Purdue AAE 451, Cessna 162 perskaičiavimas pagal 2022 m. leidimo 3–1 pavyzdį</a></li><li><a href="https://www.energy.gov/sites/prod/files/2014/04/f15/10097517.pdf">U.S. Department of Energy, Determining Electric Motor Load and Efficiency</a></li></ul><p>Šis demonstratorius skirtas konceptualiam sparnuoto sraigtinio lėktuvo projektavimui. Vandens paviršiaus hidrodinamikai, eVTOL kybojimui, pereinamajam režimui ir sertifikacinei patikrai reikalingi atitinkami atskiri modeliai.</p></section></main>
+<script>
+
+const $=id=>document.getElementById(id), g=9.80665, psf=47.88025898, kt=.5144444444, rho0=1.225;
+const specs=[
+ ['Bendrieji duomenys',[['m','Projektinė masė, kg'],['ar','Sparno proilgis'],['e','Osvaldo koeficientas'],['cd','CD₀'],['x','Projektinis W/S, N/m²'],['installed','Pasirinkta sraigto veleno galia atskaitos sąlygomis, kW'],['axis','Diagramos vertikalioji ašis','axis']]],
+ ['Kreiserinis skrydis ir posūkis',[['vc','Kreiserinis TAS, m/s'],['rc','Tankis, kg/m³'],['ec','Sraigto η'],['ac','Galios prieinamumo dalis α'],['bank','Posvyrio kampas, °'],['clt','CL,max posūkyje']]],
+ ['Aukštėjimas',[['vy','Aukštėjimo TAS, m/s'],['roc','Aukštėjimo greitis, m/s'],['ry','Tankis, kg/m³'],['ey','Sraigto η'],['ay','Galios prieinamumo dalis α']]],
+ ['Įsibėgėjimas sausumoje',[['take','Įtraukti įsibėgėjimą','check'],['roll','Didž. įsibėgėjimo kelias, m'],['rt','Tankis, kg/m³'],['clto','CL,max kilimo konfigūracijoje'],['clg','CL įsibėgėjant'],['cdg','CD įsibėgėjant'],['mu','Riedėjimo koeficientas'],['et','Sraigto η ties atsiplėšimu'],['at','Galios prieinamumo dalis α']]],
+ ['Praktinės lubos ir tūpimo konfigūracija',[['ceiling','Įtraukti praktines lubas','check'],['vz','TAS lubų aukštyje, m/s'],['rocz','Likęs aukštėjimo greitis, m/s'],['rz','Tankis, kg/m³'],['ez','Sraigto η'],['az','Galios prieinamumo dalis α'],['vs','Didž. smukos TAS, m/s'],['rs','Tankis ties smukos riba, kg/m³'],['cls','CL,max tūpimo konfigūracijoje'],['landing','Papildoma tiesioginė W/S riba, N/m² (0 – netaikoma)']]]
+];
+const inputs=specs.flatMap(([,f])=>f);
+const miniCalculations={"m": "120 kg įgula + 40 kg krovinys + 55 kg degalai + 435 kg tuščio lėktuvo masė = 650 kg. Tuščio lėktuvo masės įvertį patikrinkite pagal analogus ir masės balansą.", "ar": "Kai mostas b = 10,2 m, o plotas S = 13,0 m², AR = 10,2²/13,0 ≈ 8,0. Abi reikšmes imkite iš to paties varianto brėžinio.", "e": "Jei iš pritaikytos poliarės C_D ≈ C_D0 + KC_L² gauname K = 0,0497, tuomet e = 1/(π·8·0,0497) ≈ 0,80. K gali būti poliarės tiesės nuolydis grafike C_D prieš C_L².", "cd": "Pavyzdinė komponentų suvestinė: sparnas 0,012 + liemuo 0,010 + uodega 0,004 + važiuoklė ir kiti indėliai 0,009 = 0,035. Indėliai turi būti išreikšti tuo pačiu atskaitos plotu. Pvz., C_f·FF·Q·S_wet/S = 0,004·1,2·1·(32,5/13) = 0,012.", "x": "650·9,80665/13,28 ≈ 480 N/m². Palyginkite kelis plotus ir patikrinkite diagramos ribas. Tai bandomasis projektinis taškas.", "installed": "Esant 85 kW mechaninei variklio galiai ir tiesioginei pavarai su η = 1, sraigto velenui tenka 85 kW. Su η = 0,97 tenka 82,45 kW. Lyginkite to paties režimo ir trukmės charakteristikas.", "axis": "Galia tinka jėgainės parinkimui. T/W tinka režimų traukos poreikiui palyginti. Tai rodinio parinktis.", "vc": "Iš misijos: 130 km/h ÷ 3,6 = 36,11 m/s TAS.", "rc": "600 m aukštyje pagal ISA: T ≈ 284,25 K, p ≈ 94,3 kPa. Iš ρ = p/(287,05·T) gauname apie 1,156 kg/m³.", "ec": "Esant 36,11 m/s, 2400 aps./min ir D = 1,8 m, J = 36,11/(40·1,8) ≈ 0,50. Jei sraigto charakteristikose tame taške C_T = 0,075 ir C_P = 0,050, η ≈ JC_T/C_P ≈ 0,75.", "ac": "Jei atskaitoje prieinama 85 kW, o kreiseriniame režime 80,75 kW, α = 80,75/85 = 0,95.", "bank": "Jei reikalaujama n = 1,103, tada φ = arccos(1/1,103) ≈ 25°. Arba naudokite tiesiogiai užduotyje nurodytą kampą.", "clt": "Jei palyginamos švarios konfigūracijos poliarė ties smukos riba rodo C_L = 1,50, įrašykite 1,50. Derinkite užsparnių padėtį su numatytu posūkio režimu.", "vy": "Iš misijos: 100 km/h ÷ 3,6 = 27,78 m/s TAS. Jeigu reikalaujama didžiausio aukštėjimo greičio, V_Y pagrįskite galios pertekliaus analize arba tinkamo analogo duomenimis.", "roc": "120 m aukščio prieaugis per 60 s reiškia vidutiniškai 2 m/s. Apribojimui nustatykite, ar 2 m/s turi būti pasiekiami per visą nagrinėjamą aukštėjimo etapą.", "ry": "Jūros lygyje pagal ISA: 101325/(287,05·288,15) ≈ 1,225 kg/m³.", "ey": "Jei aukštėjant trauka 975 N, TAS ≈ 27,78 m/s ir sraigto velenui tiekiama 41,67 kW, tuomet η ≈ 975·27,78/41670 ≈ 0,65.", "ay": "Jei aukštėjant prieinama 85 kW ir atskaitoje prieinama 85 kW, α = 1,00.", "take": "Įjunkite, kai reikalavime nurodytas įsibėgėjimas sausumoje. Vandens režimui reikia atskiro hidrodinaminio modelio.", "roll": "Jei reikalavime nurodyta ne daugiau kaip 600 m nuo riedos pradžios iki atsiplėšimo, įrašykite 600 m. Kai žinomas tik tako ilgis arba atstumas iki kliūties, įsibėgėjimo ribą pagrįskite atskirai.", "rt": "Jūros lygio ISA prielaida duoda 1,225 kg/m³. Kitai kilimo vietai naudokite jos oro slėgį ir temperatūrą, ρ = p/(287,05T).", "clto": "650 kg, S = 13,28 m² ir kilimo konfigūracijos smukos greitis apie 21,8 m/s TAS prie ρ = 1,225 duoda C_L,max ≈ 2mg/(ρV²S) ≈ 1,65. Naudokite analogą su panašia kilimo užsparnių padėtimi.", "clg": "Jei pasirinktoje riedos padėtyje modelis ties V = 20 m/s ir S = 13,28 m² duoda L = 1627 N, tuomet C_L = L/(0,5·1,225·20²·13,28) ≈ 0,50.", "cdg": "Jei toje pačioje būsenoje D ≈ 130 N, C_D = 130/(0,5·1,225·20²·13,28) ≈ 0,040. Naudokite riedos konfigūraciją.", "mu": "Jei pagal bandymo ar analoginius duomenis esant 5000 N normaliajai apkrovai riedėjimo pasipriešinimas 200 N, μ = 200/5000 = 0,04. Nurodykite dangą.", "et": "Jei ties atsiplėšimu V ≈ 24 m/s, T = 1200 N ir sraigto veleno galia 48 kW, η ≈ 1200·24/48000 = 0,60. Tikrinkite pasirinktą sraigto darbo tašką.", "at": "Jei kilimo režime prieinama 85 kW, tiek pat kiek atskaitoje, α = 1,00. Atskirai patikrinkite leistiną šios galios trukmę.", "ceiling": "Įjunkite, kai nurodytas konkretus aukštis ir likutinis aukštėjimo greitis. Amfibijos pavyzdyje šis apribojimas išjungtas.", "vz": "Jei analizei duota EAS ≈ 28,32 m/s ir ρ = 0,85 kg/m³, TAS ≈ 28,32√(1,225/0,85) ≈ 34,0 m/s.", "rocz": "Jei reikalaujama 100 ft/min, SI reikšmė 100·0,3048/60 = 0,508 m/s.", "rz": "Jei lubų aukštyje p ≈ 69,5 kPa ir T ≈ 285 K, ρ ≈ 69500/(287,05·285) ≈ 0,85 kg/m³. Naudokite vieną nuoseklią atmosferos būseną.", "ez": "Jei taikomo sraigto diagrama tame darbo taške rodo J = 0,65 ir C_T/C_P = 1,0, η = 0,65.", "az": "Jei tame aukštyje prieinama 55,25 kW, o atskaitoje 85 kW, α = 0,65. Naudokite jėgainės charakteristikas.", "vs": "Jei projektuojama pagal 22 m/s TAS ribą jūros lygyje, įrašykite 22. Jei įvestis iš vadovo yra KCAS, pirma perskaičiuokite į m/s ir suderinkite greičio bei tankio atskaitą.", "rs": "22 m/s TAS jūros lygio ISA pavyzdžiui ρ = 101325/(287,05·288,15) ≈ 1,225 kg/m³.", "cls": "Cessna 162 analogo tūpimo pavyzdys: m ≈ 599 kg, S ≈ 11,15 m², V_S0 = 40 KCAS ≈ 20,58 m/s EAS pirminiam įverčiui. C_L,max ≈ 2·599·9,80665/(1,225·20,58²·11,15) ≈ 2,03. Amfibijos 1,70 yra atskira mokomoji prielaida. Jei pagrindžiamas 1,6–2,0 intervalas, prie V_S = 22 m/s W/S riba kinta maždaug nuo 474 iki 593 N/m².", "landing": "Jei atskira tūpimo analizė nustatė S ≥ 13 m² esant modelyje taikomam 650 kg svoriui, riba 650·9,80665/13 ≈ 490 N/m². Jei tokios atskiros ribos nėra, įrašykite 0."};
+$('mini-calculations').innerHTML=specs.map(([title,fields],i)=>'<details '+(i===0?'open':'')+'><summary>'+title+'</summary><div class="scroll"><table><thead><tr><th>Įvestis</th><th>Kaip gauti reikšmę</th></tr></thead><tbody>'+fields.map(([key,label])=>'<tr><td>'+label+'</td><td>'+miniCalculations[key]+'</td></tr>').join('')+'</tbody></table></div></details>').join('');
+$('inputs').innerHTML=specs.map(([title,fields])=>'<fieldset><legend>'+title+'</legend>'+fields.map(([k,l,kind])=>'<label>'+l+' '+(kind==='axis'?'<select id="f-axis"><option value="power">Sraigto veleno galia atskaitos sąlygomis, kW</option><option value="thrust">T/W režime</option></select>':'<input id="f-'+k+'" type="'+(kind==='check'?'checkbox':'number')+'" step="any">')+'</label>').join('')+'</fieldset>').join('');
+const base={m:650,ar:8,e:.8,cd:.035,x:480,installed:85,axis:'power',vc:130/3.6,rc:1.156,ec:.75,ac:.95,bank:25,clt:1.5,vy:100/3.6,roc:2,ry:1.225,ey:.65,ay:1,take:true,roll:600,rt:1.225,clto:1.65,clg:.5,cdg:.04,mu:.04,et:.6,at:1,ceiling:false,vz:34,rocz:.508,rz:.85,ez:.65,az:.65,vs:22,rs:1.225,cls:1.7,landing:0};
+const rc=.001869*515.378818, rz=.6292*rho0;
+const cessna={...base,m:1320*.45359237, ar:8,e:.8106,cd:.0333,x:10*psf,installed:100*.745699872,vc:108*kt,rc,ac:1.132*rc/rho0-.132,bank:30,clt:0,vy:(43.591+2.2452*10)*kt,roc:880*.3048/60,roll:640*.3048,clto:1.756,cdg:.038,ceiling:true,vz:(43.591+2.2452*10)*kt/Math.sqrt(.6292),rz,az:1.132*.6292-.132,vs:0,landing:11.37*psf};
+let mode='cessna', analogs=[];
+const notes={cessna:'Cessna 162 · Gudmundssono skaičiavimo pavyzdys. Aukštėjimo ir lubų TAS priklauso nuo W/S pagal šaltinio ryšį. Pakeitus bet kurį iš tų dviejų TAS laukų, tam režimui naudojama įvesta pastovi reikšmė. Įjungta šaltinyje pateikta tūpimo W/S riba. Posūkio CL,max nepateiktas, todėl ši papildoma riba netaikoma.',amphib:'Amfibija · mokomasis atvejis. Iš misijos perimti 130 km/h kreiserinis TAS, 600 m kreiserinis aukštis (ISA tankis apytikslis), 100 km/h aukštėjimo TAS, 2 m/s aukštėjimas ir 600 m tako ilgis. Šiame pavyzdyje 600 m laikoma įsibėgėjimo kelio riba, kurią tikrame projekte reikia pagrįsti. Masė, pasipriešinimo poliarė, smukos riba ir jėgainės dydžiai yra mokomosios prielaidos.',own:'Mano projektas · pakeiskite visas mokomąsias reikšmes savo šaltiniais ir nurodykite reikalavimų ID.'};
+function load(p){
+ for(const [k,,kind] of inputs){const el=$('f-'+k);if(kind==='check')el.checked=p[k];else el.value=roundInput(k,p[k])}
+}
+function read(){
+ return Object.fromEntries(inputs.map(([k,,kind])=>{const el=$('f-'+k);return [k,kind==='check'?el.checked:kind==='axis'?el.value:String(el.value).trim()===''?NaN:Number(el.value)]}));
+}
+function evaluate(p,x){
+ const k=1/(Math.PI*p.ar*p.e), q=(rho,v)=>rho*v*v/2;
+ const drag=(rho,v,n=1)=>{const Q=q(rho,v);return Q*p.cd/x+k*n*n*x/Q};
+ const vy=mode==='cessna'&&(p.vy===cessna.vy||p.vy===roundInput("vy",cessna.vy))?(43.591+2.2452*x/psf)*kt:p.vy;
+ const vz=mode==='cessna'&&(p.vz===cessna.vz||p.vz===roundInput("vz",cessna.vz))?(43.591+2.2452*x/psf)*kt/Math.sqrt(p.rz/rho0):p.vz;
+ const n=1/Math.cos(p.bank*Math.PI/180);
+ const rows=[['Kreiserinis skrydis',drag(p.rc,p.vc),p.vc,p.ec,p.ac],
+ ['Aukštėjimas',drag(p.ry,vy)+p.roc/vy,vy,p.ey,p.ay]];
+ if(p.bank>0)rows.push(['Posūkis',drag(p.rc,p.vc,n),p.vc,p.ec,p.ac]);
+ if(p.take) rows.push(['Įsibėgėjimas',1.21*x/(g*p.rt*p.clto*p.roll)+.605*(p.cdg-p.mu*p.clg)/p.clto+p.mu,1.1*Math.sqrt(2*x/(p.rt*p.clto)),p.et,p.at]);
+ if(p.ceiling) rows.push(['Praktinės lubos',drag(p.rz,vz)+p.rocz/vz,vz,p.ez,p.az]);
+ return rows.map(([name,tw,v,eta,alpha])=>({name,tw,v,power:tw*p.m*g*v/(eta*alpha*1000)}));
+}
+const up=(p)=>Math.min(p.landing||Infinity,p.vs? .5*p.rs*p.vs**2*p.cls:Infinity,p.bank&&p.clt>0? .5*p.rc*p.vc**2*p.clt*Math.cos(p.bank*Math.PI/180):Infinity);
+const fmt=(v,d=1)=>Number.isFinite(v)?v.toLocaleString('lt-LT',{maximumFractionDigits:d,minimumFractionDigits:d}):'—';
+const max=(r,k)=>r.reduce((a,b)=>a[k]>=b[k]?a:b);
+function valid(p){
+ const active=['m','ar','e','cd','x','installed','vc','rc','ec','ac','vy','ry','ey','ay',...(p.take?['roll','rt','clto','cdg','et','at']:[]),...(p.ceiling?['vz','rz','ez','az']:[]),...(p.vs?['rs','cls']:[])];
+ if(!active.every(k=>Number.isFinite(p[k])&&p[k]>0))return false;
+ const fractions=['e','ec','ac','ey','ay',...(p.take?['et','at']:[]),...(p.ceiling?['ez','az']:[])];
+ return fractions.every(k=>p[k]<=1)&&p.bank>=0&&p.bank<90&&p.vs>=0&&p.landing>=0&&p.clt>=0&&p.roc>=0&&(!p.take||(p.mu>=0&&p.mu<=1&&p.clg>=0&&p.clg<=p.clto&&p.cdg>=p.mu*p.clg))&&(!p.ceiling||p.rocz>=0);
+}
+const colors=['#2868a5','#b76719','#7949a2','#24806a','#a44365'];
+function plot(p,cap){
+ const c=$('chart'),ctx=c.getContext('2d'), l=65,r=1005,t=26,b=380;
+ ctx.clearRect(0,0,c.width,c.height);
+ const xmax=Math.max(p.x*1.25,Number.isFinite(cap)?cap*1.23:0), xmin=Math.min(xmax*.25,p.x*.6,Number.isFinite(cap)?cap*.65:Infinity);
+ const key=p.axis==='thrust'?'tw':'power';
+ const sample=Array.from({length:151},(_,i)=>{const x=xmin+(xmax-xmin)*i/150;return {x,rows:evaluate(p,x)}});
+ const points=key==='power'?analogs.filter(a=>a.show&&a.x>=xmin&&a.x<=xmax&&a.P>0).map(a=>({...a,P:a.P*p.m/a.m})):[];
+ const ymax=1.12*Math.max(...sample.map(a=>max(a.rows,key)[key]),...(key==='power'?[p.installed,...points.map(a=>a.P)]:[]));
+ const X=x=>l+(r-l)*(x-xmin)/(xmax-xmin),Y=y=>b-(b-t)*y/ymax;
+ const line=(points,color,width=2)=>{ctx.strokeStyle=color;ctx.lineWidth=width;ctx.beginPath();points.forEach(([x,y],i)=>i?ctx.lineTo(X(x),Y(y)):ctx.moveTo(X(x),Y(y)));ctx.stroke()};
+ ctx.font='13px system-ui';ctx.fillStyle='#20384a';
+ for(let i=0;i<=5;i++){const y=ymax*i/5,x=xmin+(xmax-xmin)*i/5;line([[xmin,y],[xmax,y]],'#dbe6ee',1);ctx.fillStyle='#20384a';ctx.fillText(fmt(y,key==='power'?0:2),8,Y(y)+4);ctx.fillText(fmt(x,0),X(x)-15,b+20)}
+ const feasible=sample.filter(a=>a.x<=cap);
+ if(feasible.length>1){ctx.beginPath();ctx.moveTo(X(feasible[0].x),t);feasible.forEach(a=>ctx.lineTo(X(a.x),Y(max(a.rows,key)[key])));ctx.lineTo(X(feasible.at(-1).x),t);ctx.closePath();ctx.fillStyle='#dcefe8';ctx.fill()}
+ line([[xmin,0],[xmax,0]],'#20384a');
+ sample[0].rows.forEach((row,i)=>{line(sample.map(a=>[a.x,a.rows[i][key]]),colors[i]);ctx.fillStyle=colors[i];ctx.fillText(row.name,l+i*154,442)});
+ line(sample.map(a=>[a.x,max(a.rows,key)[key]]),'#20384a',3);
+ if(Number.isFinite(cap)&&cap>=xmin){line([[cap,0],[cap,ymax]],'#ad3434');ctx.fillStyle='#ad3434';ctx.fillText('W/S riba',X(cap)+6,20)}
+ function mark(x,y,label,color){ctx.fillStyle=color;ctx.beginPath();ctx.arc(X(x),Y(y),5,0,2*Math.PI);ctx.fill();ctx.fillText(label,X(x)+9,Y(y)-6)}
+ points.forEach(a=>mark(a.x,a.P,a.name,'#66532e'));
+ if(p.x>=xmin)mark(p.x,key==='power'?p.installed:max(evaluate(p,p.x),key)[key],key==='power'?'Pasirinkta galia':'Reikalingas T/W','#111827');
+ ctx.fillStyle='#20384a';ctx.fillText('W/S, N/m²',r-74,b+42);ctx.fillText(key==='power'?'P₀, kW':'T/W',8,16);ctx.fillText('Žalia sritis · tenkinami įtraukti apribojimai',l,465);
+}
+function render(){
+ const p=read();showOrigins(p);
+ if(!valid(p)){$('candidates').innerHTML='';$('cd-sensitivity').textContent='';$('error').textContent='Patikrinkite aktyvių laukų reikšmes, naudingumo koeficientus ir galios prieinamumą.';$('chart').hidden=true;$('result').textContent='';$('regimes').innerHTML='';$('sensitivity').textContent='';$('csv').disabled=true;return}
+ $('error').textContent='';$('chart').hidden=false;$('csv').disabled=false;
+ const cap=up(p),rows=evaluate(p,p.x), demanding=max(rows,'power');
+ plot(p,cap);showCandidates(p,cap);
+ $('result').textContent='Sparno plotas '+fmt(p.m*g/p.x,2)+' m². Reikalinga veleno galia jūros lygio atskaitoje '+fmt(demanding.power)+' kW. Lemiantis režimas – '+demanding.name.toLowerCase()+'. Pasirinktos galios atsarga '+fmt(p.installed-demanding.power)+' kW. '+(Number.isFinite(cap)?'W/S riba '+fmt(cap)+' N/m². ':'W/S riba nenustatyta. ')+(p.x<=cap&&p.installed>=demanding.power?'Taškas tenkina įtrauktas ribas.':'Taškas pažeidžia bent vieną įtrauktą ribą.');
+ $('regimes').innerHTML='<thead><tr><th>Režimas</th><th>TAS, m/s</th><th>T/W</th><th>P₀, kW</th></tr></thead><tbody>'+rows.map(row=>'<tr><td>'+row.name+'</td><td>'+fmt(row.v)+'</td><td>'+fmt(row.tw,3)+'</td><td>'+fmt(row.power)+'</td></tr>').join('')+'</tbody>';
+ $('sensitivity').textContent='W/S jautrumas. '+[.9,1,1.1].map(f=>{const x=p.x*f,r=max(evaluate(p,x),'power');return fmt(x,0)+' N/m² → '+fmt(r.power)+' kW ('+r.name.toLowerCase()+(x>cap?', virš W/S ribos':'')+')'}).join(' · ');
+}
+document.querySelectorAll('[data-case]').forEach(b=>b.onclick=()=>{mode=b.dataset.case;load(mode==='cessna'?cessna:base);$('case-note').textContent=notes[mode];render()});
+$('inputs').oninput=render;
+const number=v=>typeof v==='number'?v:typeof v==='string'&&v.trim()?Number(v.replace(',','.')):NaN;
+function getAnalogs(data){
+ if(data.schema!=='orlaiviu-analogu-analize-v1'||!Array.isArray(data.rows))throw Error('Reikalingas analogų analizės JSON.');
+ return data.rows.filter(r=>r&&r.include!==false&&number(r.S)>0&&number(r.m)>0).map(r=>({name:String(r.name??r.id??'Analogas'),mode:String(r.mode??''),x:number(r.m)*g/number(r.S),m:number(r.m),P:number(r.P),ar:number(r.b)**2/number(r.S),show:false}));
+}
+function renderAnalogs(){
+ const host=$('analog-rows');host.replaceChildren();
+ analogs.forEach(a=>{
+ const p=document.createElement('p');p.textContent=a.name+' · W/S '+fmt(a.x)+' N/m² · proilgis '+fmt(a.ar,2)+' · galia '+fmt(a.P)+' kW · '+(a.mode||'galios atskaita nenurodyta')+' ';
+ const use=document.createElement('button');use.textContent='Perkelti W/S';use.onclick=()=>{$('f-x').value=a.x;render()};p.append(use);
+ if(a.ar>0){const ar=document.createElement('button');ar.textContent='Perkelti proilgį';ar.onclick=()=>{$('f-ar').value=a.ar;render()};p.append(' ',ar)}
+ if(a.P>0&&a.mode){const label=document.createElement('label'),check=document.createElement('input');check.type='checkbox';check.checked=a.show;check.onchange=()=>{a.show=check.checked;render()};label.append(check,' Sutampa galios rūšis ir atskaita');p.append(label)}
+ host.append(p);
+ });
+}
+$('analog-file').onchange=async e=>{try{const file=e.target.files[0];if(!file)return;analogs=getAnalogs(JSON.parse((await file.text()).replace(/^\uFEFF/,'')));renderAnalogs();render();$('import-status').textContent='Tinkamų masės ir sparno ploto įrašų: '+analogs.length+'. Galios taškui analoginio P/W santykis perskaičiuojamas į projekto masę.'}catch(err){$('import-status').textContent=err.message}finally{e.target.value=''}};
+function download(name,type,data){const url=URL.createObjectURL(new Blob([data],{type})),a=document.createElement('a');a.href=url;a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(url),3000)}
+$('save').onclick=()=>download('projektiniu_apribojimu_analize.json','application/json',JSON.stringify({schema:'projektiniu-apribojimu-analize-v1',mode,refs:$('refs').value,parameters:read(),analogs},null,2));
+$('restore').onchange=async e=>{try{const f=e.target.files[0];if(!f)return;const d=JSON.parse(await f.text());if(d.schema!=='projektiniu-apribojimu-analize-v1'||!d.parameters||!Object.hasOwn(notes,d.mode))throw Error('Netinkamas projekto JSON.');mode=d.mode;load({...base,...d.parameters});$('case-note').textContent=notes[mode];$('refs').value=String(d.refs??'');analogs=Array.isArray(d.analogs)?d.analogs.filter(a=>a&&typeof a==='object'):[];renderAnalogs();render()}catch(err){$('error').textContent=err.message}finally{e.target.value=''}};
+$('csv').onclick=()=>{const p=read(),rows=evaluate(p,p.x);download('projektiniai_apribojimai.csv','text/csv;charset=utf-8','\uFEFFRežimas;W/S (N/m²);TAS (m/s);T/W;P0 (kW)\r\n'+rows.map(a=>[a.name,fmt(p.x,2).replace(/\s/g,''),fmt(a.v,3),fmt(a.tw,5),fmt(a.power,3)].join(';')).join('\r\n'))};
+$('copy').onclick=async()=>{try{await navigator.clipboard.writeText($('prompt').textContent);$('copy-state').textContent=' Užklausa nukopijuota.'}catch{const range=document.createRange();range.selectNodeContents($('prompt'));getSelection().removeAllRanges();getSelection().addRange(range);$('copy-state').textContent=' Kopijuokite pažymėtą tekstą.'}};
+
+const origins={
+m:['1320 lb masės ekvivalentas, perskaičiuota į kg','650 kg mokomoji prielaida','Preliminarus masės balansas arba analogų įvertis'],
+ar:['Knygos pavyzdžio sparno proilgis','Mokomoji prielaida','Iš geometrijos b²/S arba palyginamų analogų'],
+e:['Knygos pavyzdžio poliarės parametras','Mokomoji prielaida','Pagal analogų poliarę, sparno geometriją arba aerodinaminį modelį'],
+cd:['Gudmundssono prielaida, C_D,min šioje poliarėje','Mokomoji konfigūracijos prielaida','Iš poliarės arba komponentų pasipriešinimo sumos'],
+x:['10 lbf/ft², pavyzdžio nagrinėjimo taškas','Mokomasis kandidatas','Iš analogų intervalo ir apribojimų diagramos'],
+installed:['100 hp × 0,7457, lyginamasis galios taškas','Mokomoji pasirinktos galios prielaida','Iš jėgainės charakteristikų atskaitos sąlygomis'],
+axis:['Rodinio pasirinkimas','Rodinio pasirinkimas','Pasirinkite traukos arba galios diagramą'],
+vc:['108 kt TAS','130 km/h iš misijos','Iš misijos ar greičio reikalavimo'],
+rc:['0,001869 slug/ft³ perskaičiuota į SI','Apytikslis ISA tankis 600 m aukštyje','Pagal kreiserinio aukščio ir temperatūros sąlygas'],
+ec:['Purdue perskaičiavimo prielaida','Mokomoji prielaida','Iš sraigto darbo taško duomenų'],
+ac:['Gagg ir Ferrar galios modelis','Mokomoji prielaida','Režimo prieinama galia dalijama iš atskaitos galios'],
+bank:['30° pavyzdžio reikalavimas','Mokomoji prielaida','Iš manevro reikalavimo'],
+clt:['0 išjungia ribą, šaltinyje dydis nenurodytas','Mokomoji prielaida','Pagal posūkio konfigūracijos aerodinaminius duomenis'],
+vy:['Pavyzdžio ryšys ties 10 lbf/ft²','100 km/h iš misijos','Iš aukštėjimo analizės arba reikalavimo'],
+roc:['880 ft/min perskaičiuota į SI','2 m/s iš misijos','Iš aukštėjimo reikalavimo'],
+ry:['Jūros lygio atskaitos tankis','Mokomasis jūros lygio tankis','Pagal aukštėjimo režimo atmosferą'],
+ey:['Purdue perskaičiavimo prielaida','Mokomoji prielaida','Iš sraigto darbo taško aukštėjant'],
+ay:['Jūros lygio atskaita','Priimama visa atskaitos galia','Pagal tame režime prieinamą galią'],
+take:['Pavyzdyje įtrauktas kilimo riedos apribojimas','Įjungtas mokomasis sausumos režimas','Įjunkite, jei taikomas įsibėgėjimo apribojimas'],
+roll:['640 ft perskaičiuota į SI','600 m tako ilgis, mokomajame atvejyje priimtas kaip riedos riba','Iš reikalavimo įsibėgėjimo keliui'],
+rt:['Jūros lygio atskaitos tankis','Mokomasis jūros lygio tankis','Pagal kilimo vietos atmosferą'],
+clto:['Knygos pavyzdžio įvestis','Mokomoji prielaida','Iš kilimo konfigūracijos poliarės ar bandymų'],
+clg:['Knygos pavyzdžio įvestis','Mokomoji prielaida','Pagal reprezentatyvią kilimo riedos būseną'],
+cdg:['Knygos pavyzdžio įvestis','Mokomoji prielaida','Pagal riedos konfigūraciją ir pasirinktą CL'],
+mu:['Knygos pavyzdžio įvestis','Mokomoji prielaida','Pagal tako dangą ir važiuoklę'],
+et:['Purdue prielaida ties atsiplėšimu','Mokomoji prielaida','Iš sraigto duomenų ties atsiplėšimo greičiu'],
+at:['Jūros lygio atskaita','Priimama visa atskaitos galia','Pagal kilimo režimo prieinamą galią'],
+ceiling:['Praktinių lubų apribojimas įjungtas','Apribojimas išjungtas','Įjunkite pagal misiją ar reikalavimą'],
+vz:['Pavyzdžio VY perskaičiuotas pagal tankio santykį','Mokomoji prielaida, kol režimas išjungtas','Iš aukštėjimo analizės lubų aukštyje'],
+rocz:['100 ft/min perskaičiuota į SI','Mokomoji prielaida, kol režimas išjungtas','Iš praktinių lubų apibrėžties projekte'],
+rz:['Pavyzdžio tankio santykis 0,6292 × jūros lygio tankis','Mokomoji prielaida, kol režimas išjungtas','Pagal lubų aukščio atmosferą'],
+ez:['Purdue perskaičiavimo prielaida','Mokomoji prielaida, kol režimas išjungtas','Iš sraigto darbo taško lubų aukštyje'],
+az:['Gagg ir Ferrar galios modelis','Mokomoji prielaida, kol režimas išjungtas','Pagal galios prieinamumą lubų aukštyje'],
+vs:['0 išjungia atskirą greičio ribą','Mokomoji smukos greičio riba','Iš reikalavimų, patikrinus greičio rūšį'],
+rs:['Neaktyvus, kai greičio riba išjungta','Mokomasis jūros lygio tankis','Pagal būseną, kuriai išreikštas TAS'],
+cls:['Neaktyvus, kai greičio riba išjungta','Mokomoji prielaida','Iš tūpimo konfigūracijos aerodinaminių duomenų'],
+landing:['11,37 lbf/ft², šaltinio tūpimo apribojimas','0 išjungia tiesioginę tūpimo ribą','Iš atskiros tūpimo analizės']
+};
+const roundInput=(k,v)=>typeof v==='number'?Number(v.toFixed(['m','x','installed','roll','landing','vc','vy','vz'].includes(k)?2:4)):v;
+function showOrigins(p){
+ const demo=mode==='cessna'?cessna:base;
+ $('input-provenance').innerHTML='<div class="scroll"><table><thead><tr><th>Įvestis</th><th>Pradinė reikšmė</th><th>Kilmė</th><th>Kaip nustatyti projekte</th></tr></thead><tbody>'+inputs.map(([k,label,kind])=>'<tr><td>'+label+'</td><td>'+(kind==='check'?(demo[k]?'Taip':'Ne'):kind==='axis'?'Galia':fmt(roundInput(k,demo[k]),['m','x','installed','roll','landing','vc','vy','vz'].includes(k)?2:4))+'</td><td>'+(mode==='own'?'Mokomoji pradinė įvestis':origins[k][mode==='cessna'?0:1])+'</td><td>'+origins[k][2]+'</td></tr>').join('')+'</tbody></table></div>';
+}
+function showCandidates(p,cap){
+ $('candidates').innerHTML='<h3>Projektinių taškų palyginimas</h3><table><tr><th>W/S (N/m²)</th><th>S (m²)</th><th>Reikalinga galia (kW)</th><th>Atsarga (kW)</th><th>Lemiantis režimas</th><th>Atitiktis</th></tr>'+[.9,1,1.1].map(f=>{const x=p.x*f, r=max(evaluate(p,x),'power'); return '<tr><td>'+fmt(x)+'</td><td>'+fmt(p.m*g/x,2)+'</td><td>'+fmt(r.power)+'</td><td>'+fmt(p.installed-r.power)+'</td><td>'+r.name+'</td><td>'+(x<=cap&&p.installed>=r.power?'Tenkinama':'Pažeidžiama riba')+'</td></tr>'}).join('')+'</table>';
+ const deltas=[.8,1,1.2].map(f=>{const d=p.cd*f,r=max(evaluate({...p,cd:d},p.x),'power');return 'CD₀ '+fmt(d,4)+' → '+fmt(r.power)+' kW ('+r.name.toLowerCase()+')'});
+ $('cd-sensitivity').textContent='CD₀ jautrumas (mokomasis ±20 %, kitos įvestys pastovios). '+deltas.join(' · ');
+}
+
+load(cessna);$('case-note').textContent=notes[mode];render();
+
+</script>
+</html>
