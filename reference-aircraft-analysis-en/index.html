@@ -1,0 +1,328 @@
+<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Aircraft Prototype and Reference Aircraft Analysis</title>
+<style>*{box-sizing:border-box}body{margin:0;background:#f3f7fb;color:#20384a;font:16px/1.65 Arial,sans-serif}main{max-width:1150px;margin:auto;padding:24px}header,section,nav{padding:22px;margin-bottom:16px;border:1px solid #d6e2ef;border-radius:12px;background:white}header{background:#eaf2fb;border-left:5px solid #377ac1}h1,h2,h3{line-height:1.25;color:#1e4f7a}h1{margin:0}nav{display:flex;gap:8px;flex-wrap:wrap}button{background:#2868a5;color:white;border:0;border-radius:8px;padding:9px 13px;font:inherit;cursor:pointer}button[aria-current]{background:#183c62}input,select,textarea{font:inherit;padding:6px;border:1px solid #9eb5cb;border-radius:5px}input[type=number]{width:105px}textarea{width:100%;min-height:85px}details,.note{background:#eef5fc;padding:12px;margin:12px 0;border-radius:8px}summary{cursor:pointer;font-weight:bold}table{border-collapse:collapse;width:100%;font-size:14px}th,td{text-align:left;vertical-align:top;padding:8px;border-bottom:1px solid #d6e2ef}th{background:#edf4fb}label{display:inline-block;margin:6px}a{color:#205c94}pre{white-space:pre-wrap}svg{max-width:100%;height:auto}small{font-size:.87rem}.scroll{overflow:auto}#out{font-weight:bold}.tools{display:flex;gap:8px;flex-wrap:wrap}</style>
+<main><header><h1>Aircraft Prototype and Reference Aircraft Analysis</h1><p>Module 3 · Selecting an eVTOL tail configuration</p></header><nav aria-label="Demonstrator stages"></nav>
+<section><h2>1. From documented eVTOL aircraft to a tail configuration</h2>
+<p>Start with winged eVTOL aircraft and prototypes whose tail configuration can be verified in manufacturer or aviation authority documents. Record the variant, propulsion architecture and the feature relevant to your design.</p>
+<div class="scroll"><table><tr><th>Tail configuration</th><th>Documented aircraft</th><th>What to evaluate</th></tr>
+<tr><td>V-tail</td><td><a href="https://www.airbus.com/en/innovation/energy-transition/hybrid-and-electric-flight/cityairbus-nextgen">Airbus CityAirbus NextGen</a> and <a href="https://public-inspection.federalregister.gov/2024-11192.pdf">Archer Midnight (M001), FAA criteria</a></td><td>Compare tail position relative to the propellers. Evaluate local flow and coupling between pitch and yaw commands.</td></tr>
+<tr><td>V-tail</td><td><a href="https://www.govinfo.gov/content/pkg/FR-2024-03-08/html/2024-04690.htm">Joby JAS4-1, FAA criteria</a></td><td>Compare the tail layout with other V-tails, accounting for the tilting propeller arrangement.</td></tr>
+<tr><td>Conventional</td><td><a href="https://www.dufour.aero/post/dufour-aerospace-releases-final-aero2-design">Early Dufour Aero2 prototype</a></td><td>Compare the separate horizontal and vertical surfaces. The manufacturer identifies the earlier layout when describing the switch to an H-tail.</td></tr>
+<tr><td>H-tail</td><td><a href="https://www.dufour.aero/post/dufour-aerospace-releases-final-aero2-design">Revised Dufour Aero2</a> and <a href="https://www.dufour.aero/post/dufour-aerospaces-production-ready-drone-achieves-major-milestone-with-successful-first-hover-flight">X2.3 hover test</a></td><td>Examine the position of the two vertical surfaces, local flow and load paths. The Aero2 is an unmanned hybrid-electric aircraft used here as a tail-layout reference.</td></tr></table></div>
+<p>Dufour changed other parts of the aircraft at the same time. This example documents the evolution of the layout. Isolating the effect of the H-tail on stability or drag requires separate evidence. The NASA eCRM-001 T-tail is a <a href="https://ntrs.nasa.gov/api/citations/20210026909/downloads/NASA-CR-20210026909.pdf">concept study</a>. Use the documented prototypes in the table for the main comparison.</p>
+<p>Treat the V-tail as a design hypothesis. Use the reference aircraft to identify the mission phases and design criteria for which it may be suitable. Select at least five aircraft or components and state which design decision each informs.</p><h3>How do you determine which configuration is most common?</h3>
+<p>Define the sample before counting. Include winged passenger eVTOL programmes with a documented prototype variant, including aircraft without an aft tail. Count one preselected variant per programme and report changes between variants separately. Use unmanned hybrid aircraft as supplementary layout references. Mark insufficiently documented entries as “Unverified” and report their number.</p>
+<p>The initial sample includes three programmes with documented V-tails: CityAirbus NextGen, Archer Midnight M001 and Joby JAS4-1. Look for alternative configurations when expanding the sample. The manufacturer describes the <a href="https://www.lilium-aircraft.com/newsroom-detail/technology-behind-the-lilium-jet">Lilium Jet</a> as having no vertical stabiliser. Before adding it, link that claim to a specific test variant.</p>
+<p><strong>1. Initial verification.</strong> Three of six programmes have confirmed V-tails and three remain unclassified. The V-tail share is between 3/6 and 6/6 (50–100%). If all three unclassified entries share another layout, the count is tied at 3:3. All three verified entries have V-tails, with coverage of 3/6.</p>
+<p><strong>2. Further verification and sample expansion.</strong> Verify BETA ALIA-250 and Wisk Cora. Add AutoFlight Prosperity Gen 4, a documented winged passenger eVTOL prototype with a manufacturer-reported flight test. VX4 and Prosperity require variant-specific sources for tail classification. Classify layouts with two separate vertical stabilisers joined by a horizontal surface separately from V-tails.</p>
+<div class="tools"><button id="sample-initial">Show initial sample</button><button id="sample-expanded">Show expanded sample</button></div>
+<div class="scroll"><table id="tail-sample"></table></div><p class="note" id="sample-result" aria-live="polite"></p>
+<p><strong>3. Conclusion.</strong> V-tails are confirmed in 4 of 7 programmes (57.1%), with 5 of 7 classified (71.4%). Even if the two unclassified aircraft shared the same alternative layout, that layout could account for at most three cases, including the Cora. V-tails therefore have an absolute majority in this sample. If both unclassified aircraft had V-tails, the share would rise to 6/7 (85.7%). A wider conclusion requires a predefined programme list and consistent inclusion criteria. The observed share supports investigating V-tails further. Suitability for your design requires a separate engineering assessment.</p>
+<script>
+(()=>{
+ const cases=[
+ ['CityAirbus NextGen','V-tail','https://www.airbus.com/en/innovation/energy-transition/hybrid-and-electric-flight/cityairbus-nextgen','Airbus, configuration description'],
+ ['Archer Midnight M001','V-tail','https://public-inspection.federalregister.gov/2024-11192.pdf','FAA, M001 configuration'],
+ ['Joby JAS4-1','V-tail','https://www.govinfo.gov/content/pkg/FR-2024-03-08/html/2024-04690.htm','FAA, JAS4-1 configuration'],
+ ['BETA ALIA-250','V-tail','https://www.suasnews.com/2024/04/beta-technologies-alia-250-makes-first-transition/','sUAS News, ALIA-250 description'],
+ ['Vertical Aerospace VX4','Unverified','https://vertical-aerospace.com/wp-content/uploads/2024/07/Vertical-Aerospace-Unveils-Advanced-VX4-Prototype.pdf','Vertical Aerospace, prototype documentation'],
+ ['Wisk Cora (Gen 5)','Inverted U-tail','https://www.evtol.news/kitty-hawk-cora/','Vertical Flight Society, Gen 5 specifications'],
+ ['AutoFlight Prosperity Gen 4','Unverified','https://www.autoflight.com/en/news/evtol-world-record/','AutoFlight, Gen 4 flight test']
+ ];
+ const pct=(a,b)=>(100*a/b).toLocaleString('en-GB',{maximumFractionDigits:1})+' %';
+ function draw(expanded){
+   const data=cases.slice(0,expanded?7:6).map(([name,type,url,source],i)=>[name,!expanded&&i>=3?'Unverified':type,url,source]);
+   document.getElementById('tail-sample').innerHTML='<thead><tr><th>Programme and variant</th><th>Tail configuration</th><th>Verification source</th></tr></thead><tbody>'+data.map(([name,type,url,source],i)=>'<tr><td>'+name+'</td><td>'+type+'</td><td>'+(!expanded&&i>=3?'Further verification': '<a href="'+url+'">'+source+'</a>')+'</td></tr>').join('')+'</tbody>';
+   const n=data.length, v=data.filter(r=>r[1]==='V-tail').length, u=data.filter(r=>r[1]==='Unverified').length;
+   document.getElementById('sample-result').textContent='Classification coverage: '+(n-u)+'/'+n+' ('+pct(n-u,n)+'). V-tail share: '+pct(v,n)+'–'+pct(v+u,n)+'. '+(v>n/2?'V-tails have an absolute majority in this sample.':'An absolute majority for V-tails has yet to be confirmed.');
+ }
+ document.getElementById('sample-initial').onclick=()=>draw(false);
+ document.getElementById('sample-expanded').onclick=()=>draw(true);
+ draw(false);
+})();
+</script>
+<p><strong>Student task.</strong> Define the search scope and inclusion criteria in advance. Record the programme, variant and development status, tail configuration and source. Report the counts by configuration, the sample size and the number of unclassified entries. Select references that support comparison of stability, control and layout.</p>
+<details><summary>Prompt · Define the sample and calculate prevalence</summary><pre>Use my inclusion criteria and documents to list the eVTOL programmes. Assign one specified variant to each programme. Record tail configuration, development status and the source location. Mark insufficiently documented variants as Unverified. Count the configurations and unclassified entries and calculate classification coverage. State what the sample supports and what is needed for a wider conclusion.</pre><button data-copy>Copy prompt</button></details>
+<details><summary>Lecture content and expected output</summary><p>Select reference aircraft by mission, class, configuration and operating conditions. Evaluate source quality, measurement conditions, normalisation and comparisons in tables and charts. Derive preliminary aerodynamic, structural and operational targets linked to the mission and requirements.</p><p>Submit at least five justified references, the comparison, design options informed by it, and preliminary targets with their rationale and verification method.</p></details>
+<details><summary>Prompt · Selection criteria</summary><pre>Use my mission and design brief to propose selection criteria for complete aircraft and tail assemblies. For each criterion, state the relevant design decision, a verifiable feature and a rejection condition. Treat the V-tail as one candidate. Leave unsupported numerical values blank.</pre><button data-copy>Copy prompt</button></details></section>
+<section hidden><h2>2. Select reference aircraft and import data</h2><p>Select <strong>Save JSON</strong> in the preceding demonstrator’s reference aircraft database and import that file here. Check the data and decide which entries are suitable. Import adds or updates entries by ID with the prefix IMP-. Imported rows are initially excluded from calculations. Keep the original file for your records.</p>
+<div class="tools"><label>JSON from the preceding demonstrator or this analysis <input id="file" type="file" accept=".json,application/json"></label><button id="add">Add reference aircraft</button><button id="save">Save analysis as JSON</button><button id="csv">Download comparison CSV</button></div><p id="status" role="status"></p><div class="scroll"><table id="base"></table></div><details><summary>Imported parameters and sources</summary><div class="scroll"><table id="registry"></table></div></details>
+<p><strong>Example.</strong> An ICON A5 landing gear record imported from the amphibious aircraft database includes a POH reference. For a tail comparison, find specific geometry or control data. If several values are available, select the relevant variant and operating condition manually.</p><p><strong>Evidence.</strong> Distinguish published specifications, features identified from photographs, geometry estimated from drawings and teaching assumptions. For a measurement, record the view, calibration dimension, uncertainty and aircraft variant. Use perspective photographs to identify configurations. Leave unknown quantities blank.</p>
+<details><summary>Prompt · Verify the data</summary><pre>Build a reference aircraft register from my sources. For each parameter, record its value, unit, variant, operating condition, origin, source page or section and limitations. Leave missing fields blank. Identify which entries support configuration comparison and which have sufficient data for quantitative analysis.</pre><button data-copy>Copy prompt</button></details></section>
+<section hidden><h2>3. Normalise the geometry</h2>
+<p><strong>Notation.</strong> S is wing area, b is wingspan, c̄ is mean aerodynamic chord, and l is the distance from the chosen datum to the tail aerodynamic centre. Use a consistent datum. This example uses the centre of gravity for the specified flight condition. S<sub>H</sub> and S<sub>V</sub> are horizontal and vertical tail areas. For an H-tail, sum both vertical stabiliser areas if their moment arms are identical. If the arms differ, account for the surfaces separately. S<sub>T</sub> is the total area of both V-tail panels measured in their planes. Γ is the angle of one panel from horizontal.</p>
+<p><strong>Comparison metrics.</strong> Wing aspect ratio AR = b²/S. Wing loading W/S = mg/S, with g = 9.80665 m/s². Compare P/m using the same type of power rating and operating condition. The conventional tail volume coefficients are V<sub>H</sub> = S<sub>H</sub>l<sub>H</sub>/(Sc̄) and V<sub>V</sub> = S<sub>V</sub>l<sub>V</sub>/(Sb).</p>
+<p>For a symmetric V-tail with a common moment arm, use the geometric estimates S<sub>H,eq</sub> = S<sub>T</sub>cos²Γ and S<sub>V,eq</sub> = S<sub>T</sub>sin²Γ. The two trigonometric factors arise from projecting the flow angle change and the surface force. Downwash, local dynamic pressure, finite aspect ratio and surface interference require separate evaluation.</p>
+<div class="note">Use selected references with adequate geometry and justified sources. The button loads three labelled teaching rows to demonstrate the method.</div><button id="demo">Load teaching data</button><div class="scroll"><table id="calc"></table></div><div id="plot"></div>
+<details><summary>Prompt · Independently check the calculations</summary><pre>Use my CSV and its units to reproduce b²/S, W/S, VH and VV for each reference. Show one calculation in full. Keep missing cells blank. For a V-tail, use the total area of both panels and the angle from horizontal. Record data provenance and identify the rows that support design targets.</pre><button data-copy>Copy prompt</button></details></section>
+<section hidden><h2>4. Estimate preliminary V-tail geometry</h2><p>Enter the wing geometry, tail moment arm and target V<sub>H</sub> and V<sub>V</sub>. Selecting a reference with both coefficients transfers them to the form. Adjust them as needed and justify your choice. The starting values illustrate the method.</p>
+<label>Coefficients from a reference aircraft <select id="choose"></select></label><div id="fields"></div><div id="out" aria-live="polite"></div>
+<details><summary>Worked example</summary><p>For conventional tail M-01, S = 18 m², b = 12 m, c̄ = 1.6 m, SH = 3.60 m², lH = 4.80 m, SV = 1.35 m² and lV = 4.65 m. This gives VH = 3.60 × 4.80 / (18 × 1.60) = 0.600 and VV = 1.35 × 4.65 / (18 × 12) = 0.02906.</p><p>With the same wing geometry and a 4.50 m V-tail moment arm, SH,eq = 3.84 m², SV,eq ≈ 1.395 m², ST ≈ 5.235 m² and Γ ≈ 31.1°. Each panel area is about 2.618 m². At a 4.00 m arm the total area rises to about 5.889 m² at the same angle. Use documented reference aircraft to justify your own targets.</p></details><details><summary>Calculation sequence</summary><ol><li>S<sub>H,eq</sub> = V<sub>H</sub>Sc̄/l.</li><li>S<sub>V,eq</sub> = V<sub>V</sub>Sb/l.</li><li>S<sub>T</sub> = S<sub>H,eq</sub> + S<sub>V,eq</sub>. Each panel has area S<sub>T</sub>/2.</li><li>Γ = arctan(√(S<sub>V,eq</sub>/S<sub>H,eq</sub>)). Evaluate at least two values of l.</li></ol></details></section>
+<section hidden><h2>5. Justify the configuration and design targets</h2>
+<div class="scroll"><table><tr><th>Criterion</th><th>Conventional tail</th><th>H-tail</th><th>V-tail</th></tr><tr><td>Controllability</td><td>Separate elevator and rudder.</td><td>Evaluate local flow at both vertical surfaces and rudder effectiveness.</td><td>Combined control surfaces. Check pitch–yaw coupling and travel limits.</td></tr><tr><td>Structure</td><td>Check attachments and position in the wing and propeller flow.</td><td>Check both vertical stabiliser attachments and asymmetric load paths.</td><td>Check asymmetric loads, attachments and actuator layout.</td></tr><tr><td>eVTOL flight phases</td><td colspan="3">Evaluate local flow and the contribution of each control effector in hover, transition and cruise. Check the centre-of-gravity range and relevant failure cases.</td></tr></table></div>
+<details><summary>Example design target table</summary><table><tr><th>Target</th><th>Rationale</th><th>Verification</th></tr><tr><td>Preliminary VH and VV</td><td>Range from comparable aircraft. Record the selection, values and reference datum.</td><td>Stability derivatives and trim across the centre-of-gravity range.</td></tr><tr><td>V-tail angle and area</td><td>Equivalent areas and moment arm.</td><td>Control surface effectiveness and limits under combined commands.</td></tr><tr><td>Drag and L/D</td><td>Compare at the same cruise condition and lift, trimming each configuration separately.</td><td>Compare total aircraft drag with the conventional tail configuration.</td></tr><tr><td>Tail mass and layout</td><td>Attachment locations, actuators and anticipated load cases.</td><td>Compare structural mass and accessibility. Check asymmetric loads.</td></tr></table></details>
+<p><strong>Verification sequence.</strong> In cruise, calculate the full-aircraft stability derivatives C<sub>mα</sub> and C<sub>nβ</sub>, trim deflections and remaining control margin across the centre-of-gravity range. For transition, assess propeller flow and control allocation. In hover, evaluate the applicable control effectors and local flow. Examine combined command limits and structural loads. Specify which quantities you will verify by analysis, CFD or testing.</p>
+<label for="decision">Design decision and further verification</label><textarea id="decision" placeholder="Mission need → reference evidence → options compared → preliminary decision → verification"></textarea><button id="save2">Save analysis as JSON</button>
+<details><summary>Prompt · Justify the design decision</summary><pre>Use my reference table, calculations and mission to draft a short design justification. Distinguish documented facts, assumptions and preliminary targets. For each target, state the value, rationale and verification method. Compare the conventional tail, H-tail and V-tail. Identify the results that would change the decision.</pre><button data-copy>Copy prompt</button></details></section>
+<section hidden><h2>6. Methodology and verification sources</h2><ul>
+<li><a href="https://www.oreilly.com/library/view/general-aviation-aircraft/9780123973085/xhtml/Contents.html">S. Gudmundsson, General Aviation Aircraft Design</a> · Chapters 1 (The Aircraft Design Process), 3 (Initial Sizing) and 4 (Aircraft Conceptual Layout) support the work from reference selection to preliminary configuration. Chapter 11 (The Anatomy of the Tail) supports detailed comparison of tail geometries. Chapter numbers follow the published table of contents.</li>
+<li><a href="https://ntrs.nasa.gov/citations/19930091901">Purser and Campbell, NACA Report 823</a> · Experimental evaluation of simplified V-tail theory, stability and controllability. Verify area and drag for the selected configuration.</li>
+<li><a href="https://ntrs.nasa.gov/api/citations/20220018527/downloads/AEP_report_221206_brief_CASA.pdf">NASA, eVTOL Flight Challenges</a> · Configuration diversity and differences between flight phases.</li>
+<li><a href="https://www.easa.europa.eu/en/document-library/product-certification-consultations/special-condition-vtol">EASA SC-VTOL and Means of Compliance</a> · Consult the applicable revision and category for performance verification. Use the volume coefficients here for preliminary sizing.</li></ul></section>
+<section hidden><h2>7. Worked comparison cases</h2><p>Choose a case that matches your design question. Each button opens an editable copy of a teaching example.</p>
+<details open><summary>Wing · Aspect ratio and loading</summary><p>Aircraft A and B both have a mass of 600 kg. Their wing areas are 12 and 15 m² and their wingspans 10 and 12 m, respectively. Their aspect ratios are 10²/12 = 8.33 and 12²/15 = 9.60. Wing loadings are 490.3 and 392.3 N/m², so B is 20% lower. At 650 kg and a target of 420 N/m², S = 650 × 9.80665 / 420 ≈ 15.18 m². Check mission speeds, maximum lift coefficient and structural mass.</p><button data-example="0">Open wing example</button></details>
+<details><summary>Powerplant · Power and mass</summary><p>A has 80 kW at 650 kg and B has 95 kW at 850 kg. For comparable maximum continuous ratings, P/m is 0.123 and 0.112 kW/kg. C has only a short-duration rating of 110 kW and is excluded from this comparison. At 750 kg, a target of 0.12 kW/kg gives 90 kW. Check power demand by mission phase and thermal limits.</p><button data-example="1">Open power example</button></details>
+<details><summary>Landing gear · Track and centre-of-gravity height</summary><p>Compare main-wheel track B with centre-of-gravity height h above the supporting surface at the specified loading condition. For A, 1.8/0.9 gives B/h = 2.00. For B, 2.1/1.2 gives B/h = 1.75. With a preliminary target of 1.9 and h = 1.1 m, the project needs a track of 2.09 m. Assess overturning using the support polygon, the centre-of-gravity projection and the applied loads.</p><button data-example="2">Open landing gear example</button></details></section>
+<section hidden><h2>8. My prototype analysis</h2><p>Define one comparison question. Record the prototype variants, sources and measurement or operating conditions. Choose a method based on the question. Use consistent units and select comparable rows.</p>
+<details><summary>Which analysis method should I use?</summary><table><thead><tr><th>Method</th><th>Design question</th><th>Example</th></tr></thead><tbody>
+<tr><td>Direct comparison</td><td>How does a quantity differ under the same conditions?</td><td>Aircraft masses of 620 and 680 kg differ by 60 kg.</td></tr>
+<tr><td>Normalised comparison</td><td>How can aircraft of different sizes be compared?</td><td>Use W/S for wing loading. For aspect ratio, select A²/B and enter wingspan and area.</td></tr>
+<tr><td>Requirement compliance</td><td>Which prototypes meet a specified limit?</td><td>Enter range in A and a 200 km minimum in B. A range of 220 km gives +10%. A range of 180 km gives −10%.</td></tr>
+<tr><td>Multicriteria comparison</td><td>Which option merits further analysis when two criteria matter?</td><td>Define a 0–100 scale for each criterion. With A = 80, B = 60 and a 60% weight for A, the total is 72. Vary the weight and check whether the ranking changes. Screen mandatory requirements before scoring.</td></tr></tbody></table></details>
+<label>Design question <input id="own-question"></label>
+<label>Metric and unit <input id="own-metric" placeholder="E.g. W/S, N/m²"></label>
+<label>Analysis method <select id="own-formula"><option value="ratio">Ratio · A / B</option><option value="direct">Direct · A</option><option value="square">Aspect ratio · A² / B</option><option value="minimum">Margin above minimum · %</option><option value="maximum">Margin below maximum · %</option><option value="weighted">Multicriteria · weighted score</option></select></label><label id="own-weight-label" hidden>Weight of criterion A, % <input id="own-weight" type="number" min="0" max="100" value="60"></label><p class="note" id="own-method-help" aria-live="polite"></p>
+<label>Quantity A and unit <input id="own-a"></label><label>Quantity B and unit <input id="own-b"></label>
+<div class="tools"><button id="own-add">Add prototype</button><button id="own-import">Bring in reference aircraft from Stage 2</button><button id="own-new">New analysis</button></div>
+<p id="own-status" role="status"></p><div class="scroll"><table id="own-table"></table></div><p id="own-range" aria-live="polite"></p>
+<label for="own-conclusion">Proposed target, rationale and verification</label><textarea id="own-conclusion" placeholder="What value do you propose? Which prototypes and conditions support it? How will you verify it?"></textarea>
+<div class="tools"><button id="own-save">Save all work as JSON</button><button id="own-csv">Download analysis CSV</button><label>Restore work from JSON <input type="file" id="own-file" accept=".json,application/json"></label></div>
+<details><summary>Prompt · Check my design analysis</summary><pre>Check whether the prototypes in my table are comparable in mission, variant, operating condition, parameter definition and units. Reproduce the selected metric and report the sample count and range. Flag data that need verification. Relate the proposed target to the mission and suggest a verification method.</pre><button data-copy>Copy prompt</button></details></section>
+<p id="copyStatus" role="status"></p></main>
+<script>
+const nasa='https://ntrs.nasa.gov/api/citations/20220018527/downloads/AEP_report_221206_brief_CASA.pdf';
+const seed=[
+ ['A-01','CityAirbus NextGen','V-tail','Direct configuration reference: wing, V-tail and distributed propulsion.','https://www.airbus.com/en/newsroom/press-releases/2021-09-airbus-reveals-the-next-generation-of-cityairbus'],
+ ['A-02','Joby JAS4-1','V-tail','FAA-documented tail configuration. Reference for tilting propeller layout.','https://www.govinfo.gov/content/pkg/FR-2024-03-08/html/2024-04690.htm'],
+ ['A-03','BETA ALIA-250','V-tail','V-tail layout with separate lift and thrust propellers.','https://www.suasnews.com/2024/04/beta-technologies-alia-250-makes-first-transition/'],
+ ['A-04','Archer Maker','Verify against drawing','Transition reference with propellers serving different functions.',nasa],
+ ['A-05','Wisk Cora (Gen 5)','Inverted U-tail','Reference for a twin-boom tail layout.','https://www.evtol.news/kitty-hawk-cora/']
+];
+seed.push(['K-01','Beechcraft Bonanza V35 tail assembly','V-tail','Component reference for combined pitch and yaw surfaces. Check differences between its mechanism and the eVTOL control system.','https://www.faa.gov/regulations_policies/handbooks_manuals/aviation/faa-h-8083-25c.pdf']);
+seed.push(
+ ['A-06','Archer Midnight (M001)','V-tail','The FAA describes a V-tail. Compare its position relative to the wing propellers.','https://public-inspection.federalregister.gov/2024-11192.pdf'],
+ ['A-07','Dufour Aero2 – early prototype','Conventional','Earlier manufacturer-documented configuration. Layout reference.','https://www.dufour.aero/post/dufour-aerospace-releases-final-aero2-design'],
+ ['A-08','Dufour Aero2 X2.3','H-tail','Hybrid-electric eVTOL tail layout reference with two vertical stabilisers.','https://www.dufour.aero/post/dufour-aerospace-releases-final-aero2-design']
+);
+let rows=seed.map(([id,name,type,use,source])=>({id,name,type,use,source,origin:'Document',include:true}));
+rows[0].b=12;
+rows[0].use+=' Airbus specifies an approximate wingspan of 12 m.';
+rows[1].m=2400;
+rows[1].use+=' Maximum gross mass 2400 kg (jobyaviation.com/technology, Aircraft Specifications).';
+let registry=[];
+const $=id=>document.getElementById(id);
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const num=v=>typeof v==='number'?v:typeof v==='string'&&v.trim()?Number(v.trim().replace(',','.')):NaN;
+const pos=v=>Number.isFinite(num(v))&&num(v)>0;
+const fmt=v=>Number.isFinite(v)?v.toLocaleString('en-GB',{maximumFractionDigits:3}):'—';
+const cols=[['id','ID'],['name','Aircraft / component'],['type','Configuration'],['use','Applicability and limitations'],['origin','Source type'],['source','Source / location'],['S','S, m²'],['b','b, m'],['c','c̄, m'],['m','m, kg'],['P','P, kW'],['mode','Power type / operating condition'],['h','SH, m²'],['v','SV, m²'],['lh','lH or l, m'],['lv','lV, m'],['t','ST, m²'],['g','Γ, °']];
+const numeric=new Set(['S','b','c','m','P','h','v','lh','lv','t','g']);
+const fieldSpec=[['S','S, m²',18],['b','b, m',12],['c','c̄, m',1.6],['l','l, m',4.5],['vh','VH',0.6],['vv','VV',0.045]];
+$('fields').innerHTML=fieldSpec.map(([k,t,v])=>'<label>'+t+' <input type="number" min="0" step="any" id="p-'+k+'" value="'+v+'"></label>').join('');
+const sections=[...document.querySelectorAll('section')];
+const nav=document.querySelector('nav');
+['Task','Reference aircraft database','Comparison','V-tail','Design decision','Sources','Worked examples','My analysis'].forEach((s,i)=>{const b=document.createElement('button');b.textContent=(i+1)+'. '+s;b.onclick=()=>show(i);nav.append(b)});
+function show(i){sections.forEach((s,j)=>s.hidden=i!==j);[...nav.children].forEach((b,j)=>j===i?b.setAttribute('aria-current','step'):b.removeAttribute('aria-current'))}
+show(0);
+function metrics(r){
+ const {S,b,c,m,P,h,v,lh,lv,t,g}=Object.fromEntries([...numeric].map(k=>[k,num(r[k])]));
+ const vee=pos(t)&&g>0&&g<90, angle=g*Math.PI/180;
+ const sh=vee?t*Math.cos(angle)**2:h, sv=vee?t*Math.sin(angle)**2:v;
+ const verticalArm=vee?lh:lv;
+ return {ar:pos(S)&&pos(b)?b*b/S:NaN,ws:pos(S)&&pos(m)?m*9.80665/S:NaN,pm:pos(P)&&pos(m)&&String(r.mode??'').trim()?P/m:NaN,
+ vh:[sh,lh,S,c].every(pos)?sh*lh/(S*c):NaN,vv:[sv,verticalArm,S,b].every(pos)?sv*verticalArm/(S*b):NaN};
+}
+function render(){
+ $('base').innerHTML='<thead><tr><th>Include</th>'+cols.map(([k,t])=>'<th>'+t+'</th>').join('')+'<th>Action</th></tr></thead><tbody>'+rows.map((r,i)=>'<tr><td><input aria-label="Include '+esc(r.id)+'" type="checkbox" data-i="'+i+'" data-k="include" '+(r.include?'checked':'')+'></td>'+cols.map(([k,t])=>'<td><input aria-label="'+esc(t)+'" data-i="'+i+'" data-k="'+k+'" '+(numeric.has(k)?'inputmode="decimal" size="5"':'size="'+(k==='id'?6:22)+'"')+' value="'+esc(r[k])+'">'+(k==='source'&&/^https?:\/\//i.test(r[k]??'')?' <a target="_blank" rel="noopener noreferrer" href="'+esc(r[k])+'">Source</a>':'')+'</td>').join('')+'<td><button data-remove="'+i+'">Remove</button></td></tr>').join('')+'</tbody>';
+ const fields=[['id','Reference aircraft ID'],['name','Parameter'],['value','Value'],['unit','Unit'],['where','Conditions'],['source','Source'],['issue','Issue'],['page','Page'],['link','Link']];
+ $('registry').innerHTML=registry.length?'<tr>'+fields.map(([,t])=>'<th>'+t+'</th>').join('')+'</tr>'+registry.map(r=>'<tr>'+fields.map(([k])=>'<td>'+esc(r[k])+'</td>').join('')+'</tr>').join(''):'<caption>No imported parameters yet.</caption>';
+ compare();
+}
+function compare(){
+ const selected=rows.filter(r=>r.include);
+ const data=selected.map(r=>({...r,...metrics(r)}));
+ $('calc').innerHTML='<tr><th>Reference aircraft</th><th>Source type</th><th>AR</th><th>W/S, N/m²</th><th>P/m, kW/kg</th><th>Power condition</th><th>VH</th><th>VV</th></tr>'+data.map(r=>'<tr><td>'+esc(r.name)+'</td><td>'+esc(r.origin)+'</td>'+['ar','ws','pm'].map(k=>'<td>'+fmt(r[k])+'</td>').join('')+'<td>'+esc(r.mode)+'</td><td>'+fmt(r.vh)+'</td><td>'+fmt(r.vv)+'</td></tr>').join('');
+ const valid=data.filter(r=>Number.isFinite(r.vh)&&Number.isFinite(r.vv)), previous=$('choose').value;
+ $('choose').innerHTML='<option value="">Enter manually</option>'+valid.map((r,i)=>'<option value="'+i+'">'+esc(r.name)+'</option>').join('');
+ $('choose').value=previous;
+ $('choose').onchange=()=>{if($('choose').value==='')return;const r=valid[+$('choose').value];$('p-vh').value=r.vh.toFixed(4);$('p-vv').value=r.vv.toFixed(4);project()};
+ if(!valid.length){$('plot').textContent='The chart requires at least one row with both tail volume coefficients.';return}
+ const maxH=Math.max(...valid.map(r=>r.vh))*1.1,maxV=Math.max(...valid.map(r=>r.vv))*1.1;
+ $('plot').innerHTML='<svg viewBox="0 0 650 310" role="img" aria-label="Comparison of horizontal and vertical tail volume coefficients"><path d="M65 25V260H590" fill="none" stroke="#35556e"/><text x="555" y="290">VH</text><text x="15" y="30">VV</text><text x="63" y="280">0</text><text x="520" y="280">'+fmt(maxH)+'</text><text x="9" y="54">'+fmt(maxV)+'</text>'+valid.map(r=>'<circle cx="'+(65+500*r.vh/maxH)+'" cy="'+(260-210*r.vv/maxV)+'" r="6" fill="'+(r.origin==='Teaching assumption'?'#9b5622':'#2868a5')+'"><title>'+esc(r.name)+'</title></circle>').join('')+'</svg><p>'+valid.map(r=>esc(r.name)+' ('+fmt(r.vh)+' / '+fmt(r.vv)+')').join(' · ')+'</p>';
+}
+function project(){
+ const [S,b,c,l,vh,vv]=fieldSpec.map(([k])=>num($('p-'+k).value));
+ if(![S,b,c,l,vh,vv].every(pos)){$('out').textContent='Enter a positive value in every field.';return}
+ const sh=vh*S*c/l,sv=vv*S*b/l,t=sh+sv,g=Math.atan(Math.sqrt(sv/sh))*180/Math.PI;
+ $('out').textContent='SH,eq = '+fmt(sh)+' m² · SV,eq = '+fmt(sv)+' m² · ST = '+fmt(t)+' m² · area per panel = '+fmt(t/2)+' m² · Γ = '+fmt(g)+'° from horizontal';
+}
+$('fields').oninput=project;
+$('base').oninput=e=>{const {i,k}=e.target.dataset;if(k){rows[i][k]=k==='include'?e.target.checked:e.target.value;compare()}};
+$('base').onclick=e=>{if(e.target.dataset.remove!==undefined){rows.splice(+e.target.dataset.remove,1);render()}};
+$('add').onclick=()=>{let i=1;while(rows.some(r=>r.id==='B-'+i))i++;rows.push({id:'B-'+i,include:true});render()};
+$('demo').onclick=()=>{for(const [id,type,d] of [['M-01','Conventional',{h:3.6,v:1.35,lh:4.8,lv:4.65}],['M-02','H-tail',{h:4.1,v:1.7,lh:4.7,lv:4.3}],['M-03','V-tail',{t:5.5,g:35,lh:4.6}]]){
+ if(!rows.some(r=>r.id===id))rows.push({id,name:id+' · '+type,type,include:true,origin:'Teaching assumption',S:18,b:12,c:1.6,m:2000,...d})}render()};
+const lookup=(r,...ks)=>ks.map(k=>r[k]).find(v=>v!==undefined&&v!==null)??'';
+const aliases={
+ S:[['s','sparno plotas','wing area'],'area'], b:[['b','sparno mostas','wing span','wingspan'],'length'], c:[['mac','vidutinė aerodinaminė styga','mean aerodynamic chord'],'length'],
+ m:[['mtow','didžiausia kilimo masė','maximum takeoff mass'],'mass'], h:[['sh','horizontaliosios uodegos plotas','horizontal tail area'],'area'], v:[['sv','vertikaliosios uodegos plotas','vertical tail area'],'area'],
+ lh:[['lh','horizontaliosios uodegos petys','horizontal tail arm','uodegos petys','tail arm'],'length'],lv:[['lv','vertikaliosios uodegos petys','vertical tail arm'],'length'],t:[['st','v formos uodegos bendras plotas','total v-tail area'],'area'],g:[['v formos uodegos kampas nuo horizontalės','v-tail dihedral from horizontal'],'angle']};
+const units={area:{'m²':1,m2:1,'ft²':.09290304,ft2:.09290304},length:{m:1,cm:.01,mm:.001,ft:.3048},mass:{kg:1,lb:.45359237,lbs:.45359237},angle:{'°':1,deg:1,rad:180/Math.PI}};
+$('file').onchange=async e=>{try{
+ const f=e.target.files[0];if(!f)return;if(f.size>10e6)throw Error('The file is too large.');
+ const d=JSON.parse((await f.text()).replace(/^\uFEFF/,''));
+ if(d.schema==='orlaiviu-analogu-analize-v1'&&Array.isArray(d.rows)&&d.rows.every(r=>r&&typeof r==='object')&&Array.isArray(d.registry)&&d.registry.every(r=>r&&typeof r==='object')){
+ rows=d.rows;registry=d.registry;ownRestore(d.ownAnalysis);$('decision').value=typeof d.decision==='string'?d.decision:'';for(const [k] of fieldSpec)if(pos(d.project?.[k]))$('p-'+k).value=d.project[k];
+ }else if(d.schema==='amfibija-analogai-v1'&&Array.isArray(d.analogai)&&Array.isArray(d.duomenys)&&[...d.analogai,...d.duomenys].every(r=>r&&typeof r==='object')){
+ const params=d.duomenys.map(r=>({id:lookup(r,'Analogo ID','Reference aircraft ID'),name:lookup(r,'Parametras','Parameter'),value:lookup(r,'Reikšmė','Value'),unit:lookup(r,'Vienetas','Unit'),where:lookup(r,'Sąlygos / taikymas','Conditions / applicability'),origin:lookup(r,'Kilmė','Source type'),source:lookup(r,'Dokumentas','Document'),issue:lookup(r,'Leidimas','Issue'),page:lookup(r,'Puslapis / punktas','Page / section'),link:lookup(r,'Nuoroda','Link')}));
+ for(const a of d.analogai){
+ const oldId=String(a.ID??'').trim();if(!oldId)continue;
+ const id='IMP-'+oldId;const relevant=params.filter(p=>p.id===oldId);
+ const r={id,name:lookup(a,'Modelis / versija','Model / variant'),use:lookup(a,'Kam tinkamas / kodėl atmestas','Suitable use or reason for rejection'),origin:'Imported · verify',source:relevant.find(p=>p.link)?.link??'',include:false};
+ for(const [k,[names,kind]] of Object.entries(aliases)){
+ const found=relevant.filter(p=>names.includes(String(p.name).trim().toLowerCase())&&pos(p.value)&&units[kind][String(p.unit).trim().toLowerCase()]);
+ if(found.length===1)r[k]=num(found[0].value)*units[kind][String(found[0].unit).trim().toLowerCase()];
+ }
+ if(!r.m&&pos(a['MTOW, kg']))r.m=num(a['MTOW, kg']);
+ const i=rows.findIndex(x=>x.id===id);if(i===-1)rows.push(r);else rows[i]={...rows[i],...r};
+ }
+ const imported=params.map(p=>({...p,id:'IMP-'+p.id}));const key=p=>JSON.stringify(p);registry=[...new Map([...registry,...imported].map(p=>[key(p),p])).values()];
+ }else throw Error('Select a JSON file from the previous demonstrator or from this analysis.');
+ render();project();$('status').textContent='Import complete. Check the values and sources, then select comparable aircraft.';
+ }catch(err){$('status').textContent=err.message}finally{e.target.value=''}};
+function download(name,type,text){const u=URL.createObjectURL(new Blob([text],{type}));const a=document.createElement('a');a.href=u;a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(u),3000)}
+function save(){download('reference_aircraft_analysis.json','application/json',JSON.stringify({schema:'orlaiviu-analogu-analize-v1',rows,registry,ownAnalysis:ownState(),decision:$('decision').value,project:Object.fromEntries(fieldSpec.map(([k])=>[k,$('p-'+k).value]))},null,2))}
+$('save').onclick=$('save2').onclick=save;
+$('csv').onclick=()=>{const cell=v=>{let s=String(v??'');if(/^[=+@-]/.test(s)&&!Number.isFinite(num(s)))s="'"+s;return '"'+s.replace(/"/g,'""')+'"'};
+ const lines=[[...cols.map(([,t])=>t),'AR','W/S, N/m²','P/m, kW/kg','VH','VV'],...rows.filter(r=>r.include).map(r=>[...cols.map(([k])=>r[k]),...Object.values(metrics(r)).map(v=>Number.isFinite(v)?v:'')])];download('reference_aircraft_comparison.csv','text/csv;charset=utf-8','\uFEFF'+lines.map(r=>r.map(cell).join(';')).join('\r\n'))};
+document.querySelectorAll('[data-copy]').forEach(b=>b.onclick=async()=>{const pre=b.previousElementSibling;try{await navigator.clipboard.writeText(pre.textContent);$('copyStatus').textContent='Prompt copied.'}catch{const r=document.createRange();r.selectNodeContents(pre);const s=getSelection();s.removeAllRanges();s.addRange(r);$('copyStatus').textContent='Text selected. Press Ctrl+C to copy.'}});
+
+const ownFields=['question','metric','formula','a','b','conclusion','weight'];
+const prototypeFields=[['name','Prototype / variant'],['source','Source / location'],['conditions','Comparison conditions'],['a','A'],['b','B']];
+let prototypes=[];
+const examples=[
+ {question:'What wing area is needed at the selected wing loading?',metric:'W/S, N/m²',formula:'ratio',a:'Weight W, N',b:'Wing area S, m²',values:[[5883.99,12],[5883.99,15]],conditions:'600 kg mass, common wing area definition',conclusion:'Initial target: 420 N/m². At 650 kg, S ≈ 15.18 m². Check against mission speeds and lift.'},
+ {question:'What continuous power should be used for preliminary sizing?',metric:'P/m, kW/kg',formula:'ratio',a:'Power P, kW',b:'Mass m, kg',values:[[80,650],[95,850],[110,750]],conditions:'Maximum continuous power',conclusion:'At 750 kg, 0.12 kW/kg gives 90 kW. Check mission phases and thermal limits.'},
+ {question:'What track is needed for the selected ratio?',metric:'B/h',formula:'ratio',a:'Track B, m',b:'Centre-of-gravity height h, m',values:[[1.8,.9],[2.1,1.2]],conditions:'Geometry at the specified loading condition',conclusion:'For h = 1.1 m and B/h = 1.9, B = 2.09 m. Check the support polygon and load cases.'}
+];
+const ownMethods={
+ ratio:['A / B','Enter comparable quantities A and B, with B positive.'],
+ direct:['A','Enter the comparable quantity A. B can be left blank.'],
+ square:['A² / B','A is wingspan and B is wing area. Aspect ratio is dimensionless.'],
+ minimum:['100 × (A − B) / B','A is the prototype value and B is the positive required minimum. Apply the same limit to all references. Zero means the value is at the limit.'],
+ maximum:['100 × (B − A) / B','A is the prototype value and B is the positive permitted maximum. Apply the same limit to all references. Zero means the value is at the limit.'],
+ weighted:['w × A + (1 − w) × B','Enter scores from 0 to 100 for criteria A and B. Higher scores represent better performance. Document the scale and justify the weighting in the comparison conditions and conclusion.']
+};
+function ownValue(r){
+ const a=num(r.a), b=num(r.b), method=$('own-formula').value;
+ if(method==='direct')return Number.isFinite(a)?a:NaN;
+ if(!Number.isFinite(a)||!Number.isFinite(b))return NaN;
+ if(method==='weighted'){
+   const w=num($('own-weight').value)/100;
+   return w>=0&&w<=1&&a>=0&&a<=100&&b>=0&&b<=100?w*a+(1-w)*b:NaN;
+ }
+ if(b<=0)return NaN;
+ if(method==='minimum')return 100*(a-b)/b;
+ if(method==='maximum')return 100*(b-a)/b;
+ return a>=0?(method==='square'?a*a:a)/b:NaN;
+}
+function ownSummary(){
+ const method=$('own-formula').value;
+ const threshold=method==='minimum'||method==='maximum';
+ $('own-weight-label').hidden=method!=='weighted';
+ $('own-method-help').textContent=ownMethods[method][1];
+ const included=prototypes.filter(r=>r.include);
+ const values=included.map(ownValue).filter(Number.isFinite);
+ prototypes.forEach((r,i)=>{$('own-value-'+i).textContent=fmt(ownValue(r))+(threshold&&Number.isFinite(ownValue(r))?(ownValue(r)>=0?' % · meets limit':' % · outside limit'):'')});
+ $('own-range').textContent=values.length?
+ 'Calculated '+values.length+' of '+included.length+' selected rows. Range: '+fmt(values.reduce((a,b)=>Math.min(a,b)))+'–'+fmt(values.reduce((a,b)=>Math.max(a,b)))+(threshold?' %. Meets limit: '+values.filter(v=>v>=0).length+' of '+values.length+'.':'.'):
+ 'The selected rows have no calculable values yet.';
+}
+function ownRender(){
+ $('own-table').innerHTML='<thead><tr><th>Include</th>'+prototypeFields.map(([,label])=>'<th>'+label+'</th>').join('')+'<th>Result</th><th>Action</th></tr></thead><tbody>'+prototypes.map((r,i)=>
+ '<tr><td><input type="checkbox" aria-label="Include '+(i+1)+' row" data-own-row="'+i+'" data-own-key="include" '+(r.include?'checked':'')+'></td>'+
+ prototypeFields.map(([key,label])=>'<td><input aria-label="'+label+', '+(i+1)+' row" size="'+(key==='a'||key==='b'?7:18)+'" data-own-row="'+i+'" data-own-key="'+key+'" value="'+esc(r[key])+'"></td>').join('')+
+ '<td id="own-value-'+i+'"></td><td><button data-own-remove="'+i+'">Remove</button></td></tr>').join('')+'</tbody>';
+ ownSummary();
+}
+function ownState(){
+ return {fields:Object.fromEntries(ownFields.map(k=>[k,$('own-'+k).value])),prototypes};
+}
+function ownRestore(state){
+ for(const key of ownFields) $('own-'+key).value=String(state?.fields?.[key]??(({formula:'ratio',weight:'60'})[key]??''));
+ if(!$('own-formula').value) $('own-formula').value='ratio';
+ prototypes=Array.isArray(state?.prototypes)?state.prototypes.filter(r=>r&&typeof r==='object'):[];
+ ownRender();
+}
+function ownHasWork(){
+ const state=ownState();
+ return prototypes.length||ownFields.some(k=>k!=='formula'&&k!=='weight'&&state.fields[k]);
+}
+function ownCanReplace(){
+ return !ownHasWork()||confirm('Replace the current prototype analysis? Save it as JSON first if you want to keep it.');
+}
+$('own-add').onclick=()=>{prototypes.push({include:true});ownRender()};
+$('own-new').onclick=()=>{if(ownCanReplace()){ownRestore();$('own-status').textContent='New analysis started.'}};
+$('own-import').onclick=()=>{
+ const known=new Set(prototypes.map(r=>r.originId).filter(Boolean));
+ const incoming=rows.filter(r=>r.name).filter(r=>!known.has(r.id));
+ prototypes.push(...incoming.map(r=>({originId:r.id,name:r.name,source:r.source,conditions:r.use,include:false})));
+ ownRender();
+ $('own-status').textContent='Imported records: '+incoming.length+'. Fill in A and B and select comparable rows.';
+};
+$('own-table').oninput=e=>{
+ const {ownRow,ownKey}=e.target.dataset;
+ if(!ownKey)return;
+ prototypes[ownRow][ownKey]=ownKey==='include'?e.target.checked:e.target.value;
+ ownSummary();
+};
+$('own-table').onclick=e=>{
+ const i=e.target.dataset.ownRemove;
+ if(i===undefined)return;
+ prototypes.splice(Number(i),1);
+ ownRender();
+};
+$('own-formula').onchange=ownSummary;
+$('own-weight').oninput=ownSummary;
+document.querySelectorAll('[data-example]').forEach(button=>button.onclick=()=>{
+ if(!ownCanReplace())return;
+ const example=examples[Number(button.dataset.example)];
+ ownRestore({fields:example,prototypes:example.values.map(([a,b],i)=>({
+ name:'Teaching example '+String.fromCharCode(65+i),source:'Teaching assumptions',conditions:i===2?'Short-duration power':example.conditions,a,b,include:i!==2
+ }))});
+ $('own-status').textContent='Editable copy of the worked example opened.';
+ show(7);
+});
+$('own-save').onclick=save;
+$('own-file').onchange=e=>{
+ const input=$('file');
+ input.onchange({target:e.target});
+};
+$('own-csv').onclick=()=>{
+ const state=ownState();
+ const safe=value=>{
+   let s=String(value??'');
+   if(/^[\s]*[=+@-]/.test(s)&&!Number.isFinite(num(s)))s="'"+s;
+   return '"'+s.replaceAll('"','""')+'"';
+ };
+ const lines=[
+ ['Design question',state.fields.question],
+ ['Metric',state.fields.metric],
+ ['Calculation',ownMethods[state.fields.formula][0]],
+ ['Weight of criterion A, %',state.fields.formula==='weighted'?state.fields.weight:''],
+ ['Target and verification',state.fields.conclusion],
+ [],
+ ['Included',...prototypeFields.map(([key,label])=>state.fields[key]||label),'Result'],
+ ...prototypes.map(r=>[r.include?'Yes':'No',...prototypeFields.map(([key])=>r[key]),r.include&&Number.isFinite(ownValue(r))?ownValue(r):''])
+ ];
+ download('my_prototype_analysis.csv','text/csv;charset=utf-8','\uFEFF'+lines.map(line=>line.map(safe).join(';')).join('\r\n'));
+};
+ownRender();
+
+render();project();
+</script></html>
+
+
+
+
+
+
