@@ -1,0 +1,329 @@
+<!doctype html><html lang="lt"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Analogų analizė · eVTOL uodegos projektavimas</title>
+<style>*{box-sizing:border-box}body{margin:0;background:#f3f7fb;color:#20384a;font:16px/1.65 Arial,sans-serif}main{max-width:1150px;margin:auto;padding:24px}header,section,nav{padding:22px;margin-bottom:16px;border:1px solid #d6e2ef;border-radius:12px;background:white}header{background:#eaf2fb;border-left:5px solid #377ac1}h1,h2,h3{line-height:1.25;color:#1e4f7a}h1{margin:0}nav{display:flex;gap:8px;flex-wrap:wrap}button{background:#2868a5;color:white;border:0;border-radius:8px;padding:9px 13px;font:inherit;cursor:pointer}button[aria-current]{background:#183c62}input,select,textarea{font:inherit;padding:6px;border:1px solid #9eb5cb;border-radius:5px}input[type=number]{width:105px}textarea{width:100%;min-height:85px}details,.note{background:#eef5fc;padding:12px;margin:12px 0;border-radius:8px}summary{cursor:pointer;font-weight:bold}table{border-collapse:collapse;width:100%;font-size:14px}th,td{text-align:left;vertical-align:top;padding:8px;border-bottom:1px solid #d6e2ef}th{background:#edf4fb}label{display:inline-block;margin:6px}a{color:#205c94}pre{white-space:pre-wrap}svg{max-width:100%;height:auto}small{font-size:.87rem}.scroll{overflow:auto}#out{font-weight:bold}.tools{display:flex;gap:8px;flex-wrap:wrap}</style>
+<main><header><h1>Orlaivių analogų analizė</h1><p>3 modulis · eVTOL uodegos konfigūracijos parinkimas</p></header><nav aria-label="Demonstratoriaus etapai"></nav>
+<section><h2>1. Nuo dokumentuotų eVTOL iki uodegos konfigūracijos</h2>
+<p>Pradėkite nuo sparnuotų eVTOL orlaivių ir prototipų, kurių uodegos konfigūraciją galima patikrinti gamintojo arba aviacijos institucijos dokumentuose. Kiekvienu atveju užrašykite versiją, jėgainės architektūrą ir požymį, kurį galite palyginti savo projekte.</p>
+<div class="scroll"><table><tr><th>Uodegos forma</th><th>Dokumentuotas orlaivis</th><th>Ką nagrinėti projekte</th></tr>
+<tr><td>V formos</td><td><a href="https://www.airbus.com/en/innovation/energy-transition/hybrid-and-electric-flight/cityairbus-nextgen">Airbus CityAirbus NextGen</a> ir <a href="https://public-inspection.federalregister.gov/2024-11192.pdf">Archer Midnight (M001), FAA kriterijai</a></td><td>Palyginti uodegos padėtį skirtingai išdėstytų sraigtų atžvilgiu. Atskirai tikrinti srauto poveikį ir išilginės bei krypties valdymo komandų sąveiką.</td></tr>
+<tr><td>V formos</td><td><a href="https://www.govinfo.gov/content/pkg/FR-2024-03-08/html/2024-04690.htm">Joby JAS4-1, FAA kriterijai</a></td><td>Palyginti uodegos komponuotę su kitais V formos analogais, atsižvelgiant į pasukamų sraigtų išdėstymą.</td></tr><tr><td>Įprastinė</td><td><a href="https://www.dufour.aero/post/dufour-aerospace-releases-final-aero2-design">Ankstyvasis Dufour Aero2 prototipas</a></td><td>Palyginti atskirus horizontaliuosius ir vertikaliuosius paviršius. Gamintojas šią formą įvardija aprašydamas vėlesnį perėjimą prie H formos.</td></tr>
+<tr><td>H formos</td><td><a href="https://www.dufour.aero/post/dufour-aerospace-releases-final-aero2-design">Dufour Aero2 atnaujinta konfigūracija</a>, <a href="https://www.dufour.aero/post/dufour-aerospaces-production-ready-drone-achieves-major-milestone-with-successful-first-hover-flight">X2.3 kybojimo bandymas</a></td><td>Nagrinėti dviejų vertikaliųjų paviršių padėtį, vietinį srautą ir apkrovų perdavimą. Aero2 yra bepilotis hibridinis elektrinis orlaivis, todėl čia jis naudojamas kaip uodegos komponuotės analogas.</td></tr></table></div>
+<p>„Dufour“ kartu su uodega pakeitė ir kitus orlaivio elementus. Šis pavyzdys dokumentuoja konfigūracijos raidą, tačiau iš jo atskirai nenustatysite H formos poveikio stabilumui ar pasipriešinimui. T formos NASA eCRM-001 galima nagrinėti <a href="https://ntrs.nasa.gov/api/citations/20210026909/downloads/NASA-CR-20210026909.pdf">kaip koncepcinį pavyzdį</a>, pažymint jo statusą. Pagrindinį palyginimą atlikite su lentelėje nurodytais prototipais.</p>
+<p>V formos uodega yra projekto hipotezė. Pagal analogus suformuluokite, kuriems misijos režimams ir projektiniams kriterijams ji galėtų būti tinkama. Atrinkite bent penkis orlaivius arba komponentus. Prie kiekvieno nurodykite, kokį sprendinį jis padeda pagrįsti.</p><h3>Kaip nustatyti, kuri forma dažniausia?</h3>
+<p>Pirma apibrėžkite imtį: sparnuoti keleiviniai eVTOL, kurių nurodyta versija yra dokumentuotas prototipas. Bepiločius hibridinius orlaivius nagrinėkite kaip papildomus komponuotės analogus. Skaičiuokite po vieną iš anksto pasirinktą versiją vienai programai. Jei nagrinėjate versijų kaitą, pateikite ją atskirai. Į atranką įtraukite ir orlaivius be galinės uodegos. Kai šaltinio trūksta, žymėkite „Nepatikrinta“ ir nurodykite, kiek tokių įrašų yra.</p>
+<p>Žemiau – pradinė patikros imtis. Trys atskiros programos dokumentuoja V formos uodegą: <a href="https://www.airbus.com/en/innovation/energy-transition/hybrid-and-electric-flight/cityairbus-nextgen">CityAirbus NextGen</a>, <a href="https://public-inspection.federalregister.gov/2024-11192.pdf">Archer Midnight M001</a> ir <a href="https://www.govinfo.gov/content/pkg/FR-2024-03-08/html/2024-04690.htm">Joby JAS4-1</a>. Išplėsdami imtį ieškokite alternatyvų. Pavyzdžiui, <a href="https://www.lilium-aircraft.com/newsroom-detail/technology-behind-the-lilium-jet">Lilium Jet</a> aprašyme gamintojas nurodo, kad konfigūracijoje nėra vertikaliojo stabilizatoriaus. Prieš įtraukdami į prototipų imtį susiekite dokumentą su konkrečia bandyta versija.</p>
+<p><strong>1. Pradinė patikra.</strong> Iš šešių programų trys priskirtos V formai, trys dar neklasifikuotos. V formos dalis gali būti nuo 3/6 iki 6/6 (50–100 %). Jei visi trys likę įrašai būtų vienos kitos formos, rezultatas būtų 3:3. Tarp patikrintų įrašų 3/3 yra V formos, bet aprėptis siekia tik 3/6.</p>
+<p><strong>2. Papildoma patikra ir imties plėtra.</strong> Patikriname BETA ALIA-250 ir Wisk Cora. Įtraukiame AutoFlight Prosperity Gen 4, nes tai dokumentuotas sparnuotas keleivinio eVTOL prototipas, kuriam gamintojas skelbia skrydžio bandymą. Šioje demonstracijoje VX4 ir Prosperity uodegos formai dar reikia konkrečią versiją pagrindžiančio šaltinio. Variantus su dviem atskirais stabilizatoriais, kuriuos jungia horizontalusis paviršius, klasifikuojame atskirai nuo V formos.</p>
+<div class="tools"><button id="sample-initial">Rodyti pradinę imtį</button><button id="sample-expanded">Rodyti papildytą imtį</button></div>
+<div class="scroll"><table id="tail-sample"></table></div><p class="note" id="sample-result" aria-live="polite"></p>
+<p><strong>3. Išvada.</strong> Papildytoje imtyje V forma patvirtinta 4 iš 7 programų (57,1 %), klasifikuotos 5 iš 7 (71,4 %). Net jei abu neklasifikuoti modeliai būtų vienos kitos formos, ta forma surinktų daugiausia 3 atvejus (įskaitant jau klasifikuotą Cora). Taigi V forma turi absoliučią daugumą šioje imtyje. Patvirtinta dalis yra apatinė riba: jei abu neklasifikuoti modeliai būtų V formos, jos dalis siektų 6/7 (85,7 %). Išvada galioja šioms septynioms programoms. Platesniam paplitimui įvertinti reikėtų iš anksto apibrėžto programų sąrašo ir vienodai taikomų įtraukimo kriterijų. Paplitimas pagrindžia, kodėl V formą verta nagrinėti toliau. Tinkamumą konkrečiam projektui lemia atskira inžinerinė patikra.</p>
+<script>
+(()=>{
+ const cases=[
+ ['CityAirbus NextGen','V formos','https://www.airbus.com/en/innovation/energy-transition/hybrid-and-electric-flight/cityairbus-nextgen','Airbus, konfigūracijos aprašas'],
+ ['Archer Midnight M001','V formos','https://public-inspection.federalregister.gov/2024-11192.pdf','FAA, M001 konfigūracija'],
+ ['Joby JAS4-1','V formos','https://www.govinfo.gov/content/pkg/FR-2024-03-08/html/2024-04690.htm','FAA, JAS4-1 konfigūracija'],
+ ['BETA ALIA-250','V formos','https://www.suasnews.com/2024/04/beta-technologies-alia-250-makes-first-transition/','sUAS News, ALIA-250 aprašas'],
+ ['Vertical Aerospace VX4','Nepatikrinta','https://vertical-aerospace.com/wp-content/uploads/2024/07/Vertical-Aerospace-Unveils-Advanced-VX4-Prototype.pdf','Vertical Aerospace, prototipo dokumentas'],
+ ['Wisk Cora (Gen 5)','Apverstos U formos','https://www.evtol.news/kitty-hawk-cora/','Vertical Flight Society, Gen 5 specifikacija'],
+ ['AutoFlight Prosperity Gen 4','Nepatikrinta','https://www.autoflight.com/en/news/evtol-world-record/','AutoFlight, Gen 4 bandymas']
+ ];
+ const pct=(a,b)=>(100*a/b).toLocaleString('lt-LT',{maximumFractionDigits:1})+' %';
+ function draw(expanded){
+   const data=cases.slice(0,expanded?7:6).map(([name,type,url,source],i)=>[name,!expanded&&i>=3?'Nepatikrinta':type,url,source]);
+   document.getElementById('tail-sample').innerHTML='<thead><tr><th>Programa ir versija</th><th>Uodegos forma</th><th>Patikros šaltinis</th></tr></thead><tbody>'+data.map(([name,type,url,source],i)=>'<tr><td>'+name+'</td><td>'+type+'</td><td>'+(!expanded&&i>=3?'Papildoma patikra': '<a href="'+url+'">'+source+'</a>')+'</td></tr>').join('')+'</tbody>';
+   const n=data.length, v=data.filter(r=>r[1]==='V formos').length, u=data.filter(r=>r[1]==='Nepatikrinta').length;
+   document.getElementById('sample-result').textContent='Klasifikavimo aprėptis '+(n-u)+'/'+n+' ('+pct(n-u,n)+'). V formos dalies ribos '+pct(v,n)+'–'+pct(v+u,n)+'. '+(v>n/2?'V forma turi absoliučią daugumą imtyje.':'Absoliuti V formos dauguma dar nepatvirtinta.');
+ }
+ document.getElementById('sample-initial').onclick=()=>draw(false);
+ document.getElementById('sample-expanded').onclick=()=>draw(true);
+ draw(false);
+})();
+</script><p><strong>Studento užduotis.</strong> Iš anksto aprašykite paieškos apimtį ir įtraukimo kriterijus. Sudarykite lentelę „Programa → versija ir jos statusas → uodegos forma → šaltinis“. Pateikite skaičių pagal formas, bendrą imties dydį ir neklasifikuotų įrašų skaičių. Tik tada iš tinkamų analogų rinkitės tuos, kurie padeda palyginti stabilumo, pavaldumo ir komponuotės sprendinius.</p>
+<details><summary>Užklausa · imties sudarymas ir paplitimo skaičiavimas</summary><pre>Pagal mano atrankos kriterijus ir pateiktus dokumentus sudaryk eVTOL programų sąrašą. Vienai programai priskirk vieną nurodytą versiją. Kiekvienai pateik uodegos formą, orlaivio ir konkrečios versijos būseną bei šaltinio vietą. Jei dokumento nepakanka, žymėk „Nepatikrinta“. Suskaičiuok formas, neklasifikuotus įrašus ir klasifikavimo aprėptį. Atskirai paaiškink, ką galima spręsti apie šią imtį ir kokių duomenų trūksta platesnei išvadai.</pre><button data-copy>Kopijuoti užklausą</button></details><details><summary>Paskaitos turinys ir darbo rezultatas</summary><p>Atrenkami analogai pagal paskirtį, klasę, konfigūraciją ir eksploatavimo režimus. Nagrinėjama šaltinių kokybė, matavimo sąlygos, duomenų normalizavimas ir jų palyginimas lentelėse bei grafikuose. Pagal analogų analizę nustatomi preliminarūs aerodinaminiai, konstrukciniai ir eksploataciniai siekiniai, susieti su misija bei reikalavimais.</p><p>Pateikite bent penkis pagrįstai atrinktus analogus, lyginamąją analizę, projekto plėtojimui tinkamus sprendinius ir pradinius siekinius su jų pagrindimu bei numatoma patikra.</p></details>
+<details><summary>Užklausa · atrankos kriterijai</summary><pre>Pagal mano projekto misiją ir užduotį pasiūlyk kriterijus viso orlaivio ir atskiro uodegos mazgo analogams atrinkti. Pateik kriterijų, jo ryšį su projektiniu sprendiniu, patikrinamą požymį ir sąlygą, kuriai esant analogas atmetamas. V formą vertink kaip vieną kandidatą. Nesiūlyk trūkstamų skaičių be šaltinio.</pre><button data-copy>Kopijuoti užklausą</button></details></section>
+<section hidden><h2>2. Atsirinkite analogus ir perimkite duomenis</h2><p>Ankstesnio demonstratoriaus analogų bazėje pasirinkite <strong>„Išsaugoti JSON“</strong>. Įkelkite tą failą čia. Lentelėje patikrinkite įrašus ir spręskite, kuriuos duomenis galima taikyti šios užduoties skaičiavimams. Importas prideda arba atnaujina orlaivių eilutes pagal ID su priešdėliu IMP-. Importuoti analogai iš pradžių neįtraukiami į skaičiavimus. Pirminis JSON failas lieka jūsų kompiuteryje.</p>
+<div class="tools"><label>Ankstesnio demonstratoriaus arba šios analizės JSON <input id="file" type="file" accept=".json,application/json"></label><button id="add">Pridėti analogą</button><button id="save">Išsaugoti analizę JSON</button><button id="csv">Atsisiųsti palyginimo CSV</button></div><p id="status" role="status"></p><div class="scroll"><table id="base"></table></div><details><summary>Importuotų parametrų ir šaltinių registras</summary><div class="scroll"><table id="registry"></table></div></details>
+<p><strong>Pavyzdys.</strong> Iš ankstesnės amfibijos bazės importuotas ICON A5 važiuoklės įrašas parodomas su nuoroda į POH. Šis įrašas praverčia analizuojant važiuoklę. Uodegos analizei ieškokite konkrečių jos geometrijos ar valdymo duomenų. Jei to paties dydžio reikšmių yra kelios, parinkite tinkamą variantą ir režimą ranka.</p><p><strong>Duomenų taisyklė.</strong> Gamintojo paskelbta projektinė charakteristika, nuotraukoje atpažintas požymis, brėžiniu įvertinta geometrija ir mokomoji prielaida turi skirtingą įrodomąją vertę. Matavimui užrašykite brėžinio projekciją, kalibravimo matmenį, paklaidos įvertį ir orlaivio versiją. Perspektyvinę nuotrauką naudokite konfigūracijai atpažinti. Tuščias laukas reiškia, kad dydis dar nenustatytas.</p>
+<details><summary>Užklausa · duomenų patikra</summary><pre>Iš mano pateiktų šaltinių parenk analogų registrą. Kiekvienam dydžiui pateik reikšmę, vienetą, variantą, režimą, duomenų kilmę, šaltinio puslapį ar skyrių ir ribotumus. Jei duomenų nėra, palik tuščią lauką. Atskirai išvardyk, kurie analogai tinka konfigūracijai, o kurie turi pakankamai duomenų kiekybinei analizei.</pre><button data-copy>Kopijuoti užklausą</button></details></section>
+<section hidden><h2>3. Normalizuokite geometriją</h2>
+<p><strong>Žymenys.</strong> S – sparno plotas, b – sparno mostas, c̄ – sparno vidutinė aerodinaminė styga, l – atstumas nuo pasirinktos atskaitos iki uodegos aerodinaminio centro. Visuose įrašuose naudokite tą pačią atskaitą. Šiame pavyzdyje naudojamas atstumas nuo masės centro konkrečiai skrydžio būsenai. S<sub>H</sub> ir S<sub>V</sub> – horizontaliųjų ir vertikaliųjų paviršių plotai (H formai sudėkite abiejų vertikaliųjų stabilizatorių plotus, jei jų pečiai vienodi). Jei jų pečiai skiriasi, įveskite kiekvieną atskirai. S<sub>T</sub> – bendras abiejų V formos plokštumų plotas jų plokštumoje. Γ – vienos plokštumos kampas nuo horizontalės.</p>
+<p><strong>Santykiniai rodikliai.</strong> Sparno proilgis AR = b²/S. Sparno apkrova W/S = mg/S, kai g = 9,80665 m/s². Galios ir masės santykis P/m lyginamas tik pagal tos pačios rūšies galią ir skrydžio režimą. Įprastinės uodegos geometriniai tūrio koeficientai V<sub>H</sub> = S<sub>H</sub>l<sub>H</sub>/(Sc̄) ir V<sub>V</sub> = S<sub>V</sub>l<sub>V</sub>/(Sb).</p>
+<p>Simetriškos V formos uodegos geometriniam įverčiui naudokite S<sub>H,eq</sub> = S<sub>T</sub>cos²Γ ir S<sub>V,eq</sub> = S<sub>T</sub>sin²Γ su bendru pečiu. Dvi trigonometrinės dedamosios atsiranda projektuojant srauto kampo pokytį ir paviršiaus jėgą. Įvertis dar nereprezentuoja praplovimo, vietinio dinaminio slėgio, baigtinio proilgio ar paviršių sąveikos.</p>
+<div class="note">Kiekybiniam palyginimui naudokite tik priimtus analogus su pakankama geometrija ir pagrįsta kilme. Mygtukas žemiau įkelia tris aiškiai pažymėtas mokomąsias eilutes, kad galėtumėte išbandyti metodą.</div><button id="demo">Įkelti mokomuosius skaičius</button><div class="scroll"><table id="calc"></table></div><div id="plot"></div>
+<details><summary>Užklausa · nepriklausoma skaičiavimų patikra</summary><pre>Naudodamas mano CSV ir jo laukų vienetus, atkartok kiekvieno analogo b²/S, W/S, VH ir VV. Parodyk vieną detalų skaičiavimą. Nepakeisk tuščių laukų nuliais. V formos uodegai naudok bendrą abiejų plokštumų plotą ir kampą nuo horizontalės. Pažymėk įrašų kilmę ir nurodyk, kurios eilutės tinkamos siekiniams pagrįsti.</pre><button data-copy>Kopijuoti užklausą</button></details></section>
+<section hidden><h2>4. Apskaičiuokite V formos uodegos pradinę geometriją</h2><p>Įveskite savo sparno geometriją, uodegos petį ir pasirinktus V<sub>H</sub>, V<sub>V</sub> siekinius. Pasirinkus kiekybiškai palyginamą analogą, jo koeficientai perkeliami į formą. Galite juos koreguoti ir pagrįsti pasirinkimą. Pateiktos pradinės reikšmės iliustruoja metodą.</p>
+<label>Koeficientai iš analogo <select id="choose"></select></label><div id="fields"></div><div id="out" aria-live="polite"></div>
+<details><summary>Išspręstas mokomasis pavyzdys</summary><p>Įprastinės uodegos M-01 eilutėje S = 18 m², b = 12 m, c̄ = 1,6 m, SH = 3,60 m², lH = 4,80 m, SV = 1,35 m², lV = 4,65 m. Gauname VH = 3,60 × 4,80 / (18 × 1,60) = 0,600 ir VV = 1,35 × 4,65 / (18 × 12) = 0,02906.</p><p>Jei projekto sparno geometrija tokia pati, o V formos uodegos bendras petys yra 4,50 m, gauname SH,eq = 3,84 m², SV,eq ≈ 1,395 m², ST ≈ 5,235 m² ir Γ ≈ 31,1°. Vienos plokštumos plotas ≈ 2,618 m². Sutrumpinus petį iki 4,00 m, bendras plotas padidėja iki ≈ 5,889 m², o kampas nekinta.</p><p>Šios reikšmės yra mokomosios. Pasirinkite dokumentuotus analogus, prieš pagrįsdami savo projekto siekinius.</p></details><details><summary>Skaičiavimo seka</summary><ol><li>S<sub>H,eq</sub> = V<sub>H</sub>Sc̄/l.</li><li>S<sub>V,eq</sub> = V<sub>V</sub>Sb/l.</li><li>S<sub>T</sub> = S<sub>H,eq</sub> + S<sub>V,eq</sub>. Vienos plokštumos plotas lygus S<sub>T</sub>/2.</li><li>Γ = arctan(√(S<sub>V,eq</sub>/S<sub>H,eq</sub>)). Patikrinkite peties įtaką, pakeisdami l bent dviem reikšmėmis.</li></ol></details></section>
+<section hidden><h2>5. Pagrįskite konfigūraciją ir siekinius</h2>
+<div class="scroll"><table><tr><th>Kriterijus</th><th>Įprastinė uodega</th><th>H formos uodega</th><th>V formos uodega</th></tr><tr><td>Pavaldumas</td><td>Atskiri aukščio ir krypties vairai.</td><td>Įvertinti abiejų vertikaliųjų paviršių vietinį srautą ir krypties vairų veikimą.</td><td>Bendri valdymo paviršiai. Tikrinti išilginės ir krypties komandų sąveiką bei eigos ribas.</td></tr><tr><td>Konstrukcija</td><td>Patikrinti tvirtinimo mazgus ir vietą sparno bei sraigtų sraute.</td><td>Patikrinti abiejų vertikaliųjų stabilizatorių tvirtinimus ir nesimetrinių apkrovų perdavimą.</td><td>Tikrinti nesimetrines apkrovas, tvirtinimo mazgus ir pavarų komponuotę.</td></tr><tr><td>eVTOL režimai</td><td colspan="3">Kiekvienai konfigūracijai nustatyti vietinį srautą ir valdymo priemonių indėlį kybant, pereinant į horizontalųjį skrydį ir kreiseriniame skrydyje. Tikrinti masės centro ribas bei taikomus gedimų atvejus.</td></tr></table></div>
+<details><summary>Siekinių lentelės pavyzdys</summary><table><tr><th>Siekinys</th><th>Pagrindas</th><th>Patikra</th></tr><tr><td>Preliminarūs VH ir VV</td><td>Palyginamų analogų intervalas. Užrašyti atranką, reikšmes ir perskaičiavimo atskaitą.</td><td>Stabilumo išvestinės ir orlaivio subalansavimo galimybė visame masės centro padėčių intervale.</td></tr><tr><td>V formos kampas ir plotas</td><td>Abiejų ekvivalentinių plotų ir peties skaičiavimas.</td><td>Valdymo paviršių efektyvumas ir ribos, esant kartu duodamoms komandoms.</td></tr><tr><td>Pasipriešinimas ir L/D</td><td>Lyginti konfigūracijas tuo pačiu kreiseriniu režimu, esant vienodai keliamajai jėgai ir kiekvieną variantą atskirai subalansavus.</td><td>Palyginti viso orlaivio pasipriešinimą su įprastine uodega.</td></tr><tr><td>Uodegos masė ir komponuotė</td><td>Tvirtinimo vietos, pavaros ir numatomi apkrovimo atvejai.</td><td>Palyginti konstrukcijos masę ir prieinamumą, patikrinti nesimetrines apkrovas.</td></tr></table></details><p><strong>Patikros seka.</strong> Kreiseriniam režimui apskaičiuokite viso orlaivio stabilumo išvestines C<sub>mα</sub> ir C<sub>nβ</sub>, subalansavimui reikalingas valdymo paviršių nuokrypas ir likusią pavaldumo atsargą visame nagrinėjamame masės centro intervale. Pereinamajam režimui įvertinkite sraigtų srautą ir valdymo paskirstymą. Kybant vertinkite konkretaus orlaivio valdymo priemones ir vietinį srautą. Nagrinėkite bendrų komandų ribojimą ir konstrukcines apkrovas. Apibrėžkite, ką tikrinsite analitiniu modeliu, CFD, bandymu ar kitu pasirinktu metodu.</p>
+<label for="decision">Projektinis sprendinys ir tolesnė patikra</label><textarea id="decision" placeholder="Misijos poreikis → analogų įrodymai → palyginti variantai → preliminarus sprendinys → patikra"></textarea><button id="save2">Išsaugoti analizę JSON</button>
+<details><summary>Užklausa · pagrindimo tekstas</summary><pre>Iš mano analogų lentelės, skaičiavimų ir misijos parenk trumpą projektinį pagrindimą. Atskirai pateik faktus, prielaidas ir preliminarius siekinius. Kiekvienam siekiniui nurodyk dydį, pagrindimą ir patikrą. Palygink įprastinę, H formos ir V formos uodegą. Atskleisk, kokie rezultatai pakeistų pasirinkimą.</pre><button data-copy>Kopijuoti užklausą</button></details></section>
+<section hidden><h2>6. Metodiniai šaltiniai ir patikros dokumentai</h2><ul>
+<li><a href="https://www.oreilly.com/library/view/general-aviation-aircraft/9780123973085/xhtml/Contents.html">S. Gudmundsson, General Aviation Aircraft Design</a> – 1 skyrius <i>The Aircraft Design Process</i> sieja misiją, reikalavimus ir projektavimo eigą. 3 skyrius <i>Initial Sizing</i> skirtas pradiniams orlaivio dydžiams ir charakteristikoms nustatyti. 4 skyrius <i>Aircraft Conceptual Layout</i> skirtas konfigūracijai ir komponuotei formuoti. Šiais skyriais remiamasi nuo analogų atrankos iki preliminaraus konfigūracijos pasirinkimo. 11 skyrius <i>The Anatomy of the Tail</i> taikomas vėliau, nagrinėjant pasirinkto uodegos mazgo geometriją ir alternatyvas. Skyrių numeriai pateikti pagal viešai prieinamą leidimo turinį.</li>
+<li><a href="https://ntrs.nasa.gov/citations/19930091901">Purser ir Campbell, NACA Report 823</a> – V formos uodegos supaprastintos teorijos eksperimentinė patikra, stabilumas ir pavaldumas. Vien V formos pasirinkimas ploto ar pasipriešinimo sumažėjimo negarantuoja.</li>
+<li><a href="https://ntrs.nasa.gov/api/citations/20220018527/downloads/AEP_report_221206_brief_CASA.pdf">NASA, eVTOL Flight Challenges</a> – konfigūracijų įvairovė ir skrydžio režimų skirtumai.</li>
+<li><a href="https://www.easa.europa.eu/en/document-library/product-certification-consultations/special-condition-vtol">EASA SC-VTOL ir atitikties įrodymo priemonės</a> – taikytinos redakcijos, kategorijos ir skrydžio charakteristikų patikros pagrindas. Mokomieji tūrio koeficientai nėra norminiai priėmimo kriterijai.</li></ul></section>
+<section hidden><h2>7. Išspręsti analizės atvejai</h2>
+<p>Pasirinkite atvejį pagal projektinį klausimą. Šių trijų pavyzdžių skaičiai yra mokomieji. Paspaudę mygtuką gausite atskirą redaguojamą pavyzdžio kopiją.</p>
+<details open><summary>Sparnas · proilgis ir apkrova</summary><p>Vienodos 600 kg masės analogų A ir B sparno plotai yra 12 ir 15 m², o mostai – 10 ir 12 m. A sparno proilgis 10²/12 = 8,33, B – 12²/15 = 9,60. Sparno apkrovos atitinkamai 490,3 ir 392,3 N/m². B sparno apkrova 20 % mažesnė. Jei projektuojamam 650 kg orlaiviui kaip pradinį siekinį parenkame 420 N/m², gauname S = 650 × 9,80665 / 420 ≈ 15,18 m². Pasirinkimą tikriname pagal misijos greičius, didžiausią keliamosios jėgos koeficientą ir konstrukcijos masę.</p><button data-example="0">Atverti sparno pavyzdį</button></details>
+<details><summary>Jėgainė · galia ir masė</summary><p>A turi 80 kW, kai masė 650 kg, B – 95 kW, kai masė 850 kg. Palyginamos tos pačios rūšies didžiausiosios nuolatinės galios. A rodiklis 80/650 = 0,123 kW/kg, B – 95/850 = 0,112 kW/kg. C nurodyta tik trumpalaikė 110 kW galia, todėl C paliekamas registre, tačiau jo rodiklis neįtraukiamas į šį palyginimą. 750 kg projektui, pasirinkus 0,12 kW/kg kaip pradinį siekinį, gaunama 90 kW. Tikrinamas galios poreikis pagal misijos režimus ir šiluminiai apribojimai.</p><button data-example="1">Atverti galios pavyzdį</button></details>
+<details><summary>Važiuoklė · provėža ir masės centro aukštis</summary><p>Sugretinkite važiuoklės provėžą B (skersinį atstumą tarp kairiojo ir dešiniojo pagrindinių ratų centrų) su masės centro aukščiu h, matuojamu nuo atraminio paviršiaus kiekvienam analogui nurodytoje apkrovimo būsenoje. Kai A dydžiai yra 1,8 m ir 0,9 m, B/h = 2,00. Kai B dydžiai yra 2,1 m ir 1,2 m, B/h = 1,75. Platesnę absoliučią provėžą turintis analogas turi mažesnį santykį. Jei projektui kaip preliminarų siekinį priimame B/h = 1,9, esant h = 1,1 m reikėtų 2,09 m provėžas. Apvirtimo rizikai dar vertiname atramos daugiakampį, masės centro projekciją ir veikiančias apkrovas.</p><button data-example="2">Atverti važiuoklės pavyzdį</button></details>
+</section>
+<section hidden><h2>8. Mano prototipų analizė</h2>
+<p>Apibrėžkite vieną palyginimo klausimą. Įrašykite prototipų versijas, šaltinius, matavimo arba eksploatavimo sąlygas. Pasirinkite metodą pagal savo projektinį klausimą. Visoms eilutėms taikykite tuos pačius vienetus. Palyginimui pažymėkite tik eilutes, kurių duomenys atitinka apibrėžtas sąlygas.</p>
+<details><summary>Kurį analizės metodą pasirinkti?</summary>
+<table><thead><tr><th>Metodas</th><th>Projektinis klausimas</th><th>Interpretavimo pavyzdys</th></tr></thead><tbody>
+<tr><td>Tiesioginis palyginimas</td><td>Kaip skiriasi tas pats dydis tomis pačiomis sąlygomis?</td><td>Analogų masės 620 ir 680 kg. Skirtumas 60 kg.</td></tr>
+<tr><td>Santykinis palyginimas</td><td>Kaip palyginti skirtingo dydžio orlaivius?</td><td>Sparno apkrova W/S. Jei lyginamas proilgis, pasirinkite A²/B ir įveskite mostą bei plotą.</td></tr>
+<tr><td>Atitiktis reikalavimui</td><td>Kurie prototipai atitinka konkrečią ribą?</td><td>Į A įrašykite nuotolį, į B – 200 km minimumą. Esant 220 km, atsarga +10 %. Esant 180 km, atsarga −10 %.</td></tr>
+<tr><td>Daugiakriteris palyginimas</td><td>Kurį variantą verta nagrinėti toliau, kai svarbūs du kriterijai?</td><td>Abu kriterijus įvertinkite pagal iš anksto aprašytą 0–100 balų skalę. Jei A = 80, B = 60, o A svoris 60 %, bendras balas 72. Balą perskaičiuokite kitu svoriu ir patikrinkite, ar variantų eilė keičiasi. Privalomus reikalavimus patikrinkite prieš skirdami balus.</td></tr>
+</tbody></table></details><label>Projektinis klausimas <input id="own-question"></label>
+<label>Rodiklis ir vienetas <input id="own-metric" placeholder="Pvz., W/S, N/m²"></label>
+<label>Analizės metodas <select id="own-formula"><option value="ratio">Santykis · A / B</option><option value="direct">Tiesioginis · A</option><option value="square">Proilgis · A² / B</option><option value="minimum">Atitiktis minimumui · %</option><option value="maximum">Atitiktis maksimumui · %</option><option value="weighted">Daugiakriteris · svertinis balas</option></select></label><label id="own-weight-label" hidden>A kriterijaus svoris, % <input id="own-weight" type="number" min="0" max="100" value="60"></label><p class="note" id="own-method-help" aria-live="polite"></p>
+<label>A dydis ir vienetas <input id="own-a"></label>
+<label>B dydis ir vienetas <input id="own-b"></label>
+<div class="tools"><button id="own-add">Pridėti prototipą</button><button id="own-import">Perimti analogus iš 2 etapo</button><button id="own-new">Nauja analizė</button></div>
+<p id="own-status" role="status"></p><div class="scroll"><table id="own-table"></table></div><p id="own-range" aria-live="polite"></p>
+<label for="own-conclusion">Siūlomas siekinys, pagrindimas ir patikra</label><textarea id="own-conclusion" placeholder="Kokį dydį siūlote? Kurie prototipai ir sąlygos pagrindžia pasirinkimą? Kaip jį patikrinsite?"></textarea>
+<div class="tools"><button id="own-save">Išsaugoti visą darbą JSON</button><button id="own-csv">Atsisiųsti analizės CSV</button><label>Atkurti darbą iš JSON <input type="file" id="own-file" accept=".json,application/json"></label></div>
+<details><summary>Užklausa · mano projekto analizės patikra</summary><pre>Pagal mano lentelę patikrink, ar prototipai palyginami pagal paskirtį, versiją, režimą, parametrų apibrėžtis ir vienetus. Atkartok pasirinktą rodiklį ir pateik naudotų eilučių skaičių bei intervalą. Nurodyk, kurie duomenys dar tikslintini. Susiek siūlomą siekinį su misija ir pasiūlyk, kaip jį patikrinti.</pre><button data-copy>Kopijuoti užklausą</button></details></section>
+<p id="copyStatus" role="status"></p></main>
+<script>
+const nasa='https://ntrs.nasa.gov/api/citations/20220018527/downloads/AEP_report_221206_brief_CASA.pdf';
+const seed=[
+ ['A-01','CityAirbus NextGen','V formos','Tiesioginis konfigūracijos analogas: sparnas, V formos uodega, paskirstytoji trauka.','https://www.airbus.com/en/newsroom/press-releases/2021-09-airbus-reveals-the-next-generation-of-cityairbus'],
+ ['A-02','Joby JAS4-1','V formos','FAA dokumentuota uodegos forma. Pasukamų sraigtų komponuotės analogas.','https://www.govinfo.gov/content/pkg/FR-2024-03-08/html/2024-04690.htm'],
+ ['A-03','BETA ALIA-250','V formos','V formos uodegos ir atskirų keliamųjų bei traukos sraigtų komponuotė.','https://www.suasnews.com/2024/04/beta-technologies-alia-250-makes-first-transition/'],
+ ['A-04','Archer Maker','Tikrinti pagal brėžinį','Pereinamojo režimo analogas su skirtingas funkcijas atliekančiais sraigtais.',nasa],
+ ['A-05','Wisk Cora (Gen 5)','Apverstos U formos','Dviejų sijų uodegos komponuotės analogas.','https://www.evtol.news/kitty-hawk-cora/']
+];
+seed.push(['K-01','Beechcraft Bonanza V35 uodegos mazgas','V formos','Komponento analogas bendrai aukščio ir krypties valdymo paviršių komponuotei. Tikrinti mechanizmo ir eVTOL valdymo sistemos skirtumus.','https://www.faa.gov/regulations_policies/handbooks_manuals/aviation/faa-h-8083-25c.pdf']);
+seed.push(
+ ['A-06','Archer Midnight (M001)','V formos','FAA aprašo V formos uodegą. Palyginti jos padėtį sparno sraigtų atžvilgiu.','https://public-inspection.federalregister.gov/2024-11192.pdf'],
+ ['A-07','Dufour Aero2 – ankstyvasis prototipas','Įprastinė','Gamintojo dokumentuota ankstesnė konfigūracija. Komponuotės analogas.','https://www.dufour.aero/post/dufour-aerospace-releases-final-aero2-design'],
+ ['A-08','Dufour Aero2 X2.3','H formos','Hibridinio elektrinio eVTOL uodegos komponuotės analogas. Du vertikalieji stabilizatoriai.','https://www.dufour.aero/post/dufour-aerospace-releases-final-aero2-design']
+);
+let rows=seed.map(([id,name,type,use,source])=>({id,name,type,use,source,origin:'Dokumentas',include:true}));
+rows[0].b=12;
+rows[0].use+=' Airbus nurodo apytikslį 12 m sparno mostą.';
+rows[1].m=2400;
+rows[1].use+=' Didžiausia bendroji masė 2400 kg (jobyaviation.com/technology, Aircraft Specifications).';
+let registry=[];
+const $=id=>document.getElementById(id);
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const num=v=>typeof v==='number'?v:typeof v==='string'&&v.trim()?Number(v.trim().replace(',','.')):NaN;
+const pos=v=>Number.isFinite(num(v))&&num(v)>0;
+const fmt=v=>Number.isFinite(v)?v.toLocaleString('lt-LT',{maximumFractionDigits:3}):'—';
+const cols=[['id','ID'],['name','Orlaivis / komponentas'],['type','Konfigūracija'],['use','Pritaikymas ir ribos'],['origin','Kilmė'],['source','Šaltinis / vieta'],['S','S, m²'],['b','b, m'],['c','c̄, m'],['m','m, kg'],['P','P, kW'],['mode','Galios rūšis / režimas'],['h','SH, m²'],['v','SV, m²'],['lh','lH arba l, m'],['lv','lV, m'],['t','ST, m²'],['g','Γ, °']];
+const numeric=new Set(['S','b','c','m','P','h','v','lh','lv','t','g']);
+const fieldSpec=[['S','S, m²',18],['b','b, m',12],['c','c̄, m',1.6],['l','l, m',4.5],['vh','VH',0.6],['vv','VV',0.045]];
+$('fields').innerHTML=fieldSpec.map(([k,t,v])=>'<label>'+t+' <input type="number" min="0" step="any" id="p-'+k+'" value="'+v+'"></label>').join('');
+const sections=[...document.querySelectorAll('section')];
+const nav=document.querySelector('nav');
+['Užduotis','Analogų bazė','Palyginimas','V formos uodega','Sprendinys','Šaltiniai','Išspręsti atvejai','Mano analizė'].forEach((s,i)=>{const b=document.createElement('button');b.textContent=(i+1)+'. '+s;b.onclick=()=>show(i);nav.append(b)});
+function show(i){sections.forEach((s,j)=>s.hidden=i!==j);[...nav.children].forEach((b,j)=>j===i?b.setAttribute('aria-current','step'):b.removeAttribute('aria-current'))}
+show(0);
+function metrics(r){
+ const {S,b,c,m,P,h,v,lh,lv,t,g}=Object.fromEntries([...numeric].map(k=>[k,num(r[k])]));
+ const vee=pos(t)&&g>0&&g<90, angle=g*Math.PI/180;
+ const sh=vee?t*Math.cos(angle)**2:h, sv=vee?t*Math.sin(angle)**2:v;
+ const verticalArm=vee?lh:lv;
+ return {ar:pos(S)&&pos(b)?b*b/S:NaN,ws:pos(S)&&pos(m)?m*9.80665/S:NaN,pm:pos(P)&&pos(m)&&String(r.mode??'').trim()?P/m:NaN,
+ vh:[sh,lh,S,c].every(pos)?sh*lh/(S*c):NaN,vv:[sv,verticalArm,S,b].every(pos)?sv*verticalArm/(S*b):NaN};
+}
+function render(){
+ $('base').innerHTML='<thead><tr><th>Įtraukti</th>'+cols.map(([k,t])=>'<th>'+t+'</th>').join('')+'<th>Veiksmas</th></tr></thead><tbody>'+rows.map((r,i)=>'<tr><td><input aria-label="Įtraukti '+esc(r.id)+'" type="checkbox" data-i="'+i+'" data-k="include" '+(r.include?'checked':'')+'></td>'+cols.map(([k,t])=>'<td><input aria-label="'+esc(t)+'" data-i="'+i+'" data-k="'+k+'" '+(numeric.has(k)?'inputmode="decimal" size="5"':'size="'+(k==='id'?6:22)+'"')+' value="'+esc(r[k])+'">'+(k==='source'&&/^https?:\/\//i.test(r[k]??'')?' <a target="_blank" rel="noopener noreferrer" href="'+esc(r[k])+'">Šaltinis</a>':'')+'</td>').join('')+'<td><button data-remove="'+i+'">Pašalinti</button></td></tr>').join('')+'</tbody>';
+ const fields=[['id','Analogo ID'],['name','Parametras'],['value','Reikšmė'],['unit','Vienetas'],['where','Sąlygos'],['source','Šaltinis'],['issue','Leidimas'],['page','Puslapis'],['link','Nuoroda']];
+ $('registry').innerHTML=registry.length?'<tr>'+fields.map(([,t])=>'<th>'+t+'</th>').join('')+'</tr>'+registry.map(r=>'<tr>'+fields.map(([k])=>'<td>'+esc(r[k])+'</td>').join('')+'</tr>').join(''):'<caption>Importuotų parametrų kol kas nėra.</caption>';
+ compare();
+}
+function compare(){
+ const selected=rows.filter(r=>r.include);
+ const data=selected.map(r=>({...r,...metrics(r)}));
+ $('calc').innerHTML='<tr><th>Analogas</th><th>Kilmė</th><th>AR</th><th>W/S, N/m²</th><th>P/m, kW/kg</th><th>Galios režimas</th><th>VH</th><th>VV</th></tr>'+data.map(r=>'<tr><td>'+esc(r.name)+'</td><td>'+esc(r.origin)+'</td>'+['ar','ws','pm'].map(k=>'<td>'+fmt(r[k])+'</td>').join('')+'<td>'+esc(r.mode)+'</td><td>'+fmt(r.vh)+'</td><td>'+fmt(r.vv)+'</td></tr>').join('');
+ const valid=data.filter(r=>Number.isFinite(r.vh)&&Number.isFinite(r.vv)), previous=$('choose').value;
+ $('choose').innerHTML='<option value="">Įvesti ranka</option>'+valid.map((r,i)=>'<option value="'+i+'">'+esc(r.name)+'</option>').join('');
+ $('choose').value=previous;
+ $('choose').onchange=()=>{if($('choose').value==='')return;const r=valid[+$('choose').value];$('p-vh').value=r.vh.toFixed(4);$('p-vv').value=r.vv.toFixed(4);project()};
+ if(!valid.length){$('plot').textContent='Grafikui reikia bent vienos eilutės su abiem apskaičiuotais uodegos tūrio koeficientais.';return}
+ const maxH=Math.max(...valid.map(r=>r.vh))*1.1,maxV=Math.max(...valid.map(r=>r.vv))*1.1;
+ $('plot').innerHTML='<svg viewBox="0 0 650 310" role="img" aria-label="Analogų išilginės ir krypties uodegos tūrio koeficientų palyginimas"><path d="M65 25V260H590" fill="none" stroke="#35556e"/><text x="555" y="290">VH</text><text x="15" y="30">VV</text><text x="63" y="280">0</text><text x="520" y="280">'+fmt(maxH)+'</text><text x="9" y="54">'+fmt(maxV)+'</text>'+valid.map(r=>'<circle cx="'+(65+500*r.vh/maxH)+'" cy="'+(260-210*r.vv/maxV)+'" r="6" fill="'+(r.origin==='Mokomoji prielaida'?'#9b5622':'#2868a5')+'"><title>'+esc(r.name)+'</title></circle>').join('')+'</svg><p>'+valid.map(r=>esc(r.name)+' ('+fmt(r.vh)+' / '+fmt(r.vv)+')').join(' · ')+'</p>';
+}
+function project(){
+ const [S,b,c,l,vh,vv]=fieldSpec.map(([k])=>num($('p-'+k).value));
+ if(![S,b,c,l,vh,vv].every(pos)){$('out').textContent='Įveskite visas teigiamas reikšmes.';return}
+ const sh=vh*S*c/l,sv=vv*S*b/l,t=sh+sv,g=Math.atan(Math.sqrt(sv/sh))*180/Math.PI;
+ $('out').textContent='SH,eq = '+fmt(sh)+' m² · SV,eq = '+fmt(sv)+' m² · ST = '+fmt(t)+' m² · viena plokštuma = '+fmt(t/2)+' m² · Γ = '+fmt(g)+'° nuo horizontalės';
+}
+$('fields').oninput=project;
+$('base').oninput=e=>{const {i,k}=e.target.dataset;if(k){rows[i][k]=k==='include'?e.target.checked:e.target.value;compare()}};
+$('base').onclick=e=>{if(e.target.dataset.remove!==undefined){rows.splice(+e.target.dataset.remove,1);render()}};
+$('add').onclick=()=>{let i=1;while(rows.some(r=>r.id==='B-'+i))i++;rows.push({id:'B-'+i,include:true});render()};
+$('demo').onclick=()=>{for(const [id,type,d] of [['M-01','Įprastinė',{h:3.6,v:1.35,lh:4.8,lv:4.65}],['M-02','H formos',{h:4.1,v:1.7,lh:4.7,lv:4.3}],['M-03','V formos',{t:5.5,g:35,lh:4.6}]]){
+ if(!rows.some(r=>r.id===id))rows.push({id,name:id+' · '+type,type,include:true,origin:'Mokomoji prielaida',S:18,b:12,c:1.6,m:2000,...d})}render()};
+const lookup=(r,...ks)=>ks.map(k=>r[k]).find(v=>v!==undefined&&v!==null)??'';
+const aliases={
+ S:[['s','sparno plotas','wing area'],'area'], b:[['b','sparno mostas','wing span','wingspan'],'length'], c:[['mac','vidutinė aerodinaminė styga','mean aerodynamic chord'],'length'],
+ m:[['mtow','didžiausia kilimo masė','maximum takeoff mass'],'mass'], h:[['sh','horizontaliosios uodegos plotas','horizontal tail area'],'area'], v:[['sv','vertikaliosios uodegos plotas','vertical tail area'],'area'],
+ lh:[['lh','horizontaliosios uodegos petys','horizontal tail arm','uodegos petys','tail arm'],'length'],lv:[['lv','vertikaliosios uodegos petys','vertical tail arm'],'length'],t:[['st','v formos uodegos bendras plotas','total v-tail area'],'area'],g:[['v formos uodegos kampas nuo horizontalės','v-tail dihedral from horizontal'],'angle']};
+const units={area:{'m²':1,m2:1,'ft²':.09290304,ft2:.09290304},length:{m:1,cm:.01,mm:.001,ft:.3048},mass:{kg:1,lb:.45359237,lbs:.45359237},angle:{'°':1,deg:1,rad:180/Math.PI}};
+$('file').onchange=async e=>{try{
+ const f=e.target.files[0];if(!f)return;if(f.size>10e6)throw Error('Failas per didelis.');
+ const d=JSON.parse((await f.text()).replace(/^\uFEFF/,''));
+ if(d.schema==='orlaiviu-analogu-analize-v1'&&Array.isArray(d.rows)&&d.rows.every(r=>r&&typeof r==='object')&&Array.isArray(d.registry)&&d.registry.every(r=>r&&typeof r==='object')){
+ rows=d.rows;registry=d.registry;ownRestore(d.ownAnalysis);$('decision').value=typeof d.decision==='string'?d.decision:'';for(const [k] of fieldSpec)if(pos(d.project?.[k]))$('p-'+k).value=d.project[k];
+ }else if(d.schema==='amfibija-analogai-v1'&&Array.isArray(d.analogai)&&Array.isArray(d.duomenys)&&[...d.analogai,...d.duomenys].every(r=>r&&typeof r==='object')){
+ const params=d.duomenys.map(r=>({id:lookup(r,'Analogo ID','Reference aircraft ID'),name:lookup(r,'Parametras','Parameter'),value:lookup(r,'Reikšmė','Value'),unit:lookup(r,'Vienetas','Unit'),where:lookup(r,'Sąlygos / taikymas','Conditions / applicability'),origin:lookup(r,'Kilmė','Source type'),source:lookup(r,'Dokumentas','Document'),issue:lookup(r,'Leidimas','Issue'),page:lookup(r,'Puslapis / punktas','Page / section'),link:lookup(r,'Nuoroda','Link')}));
+ for(const a of d.analogai){
+ const oldId=String(a.ID??'').trim();if(!oldId)continue;
+ const id='IMP-'+oldId;const relevant=params.filter(p=>p.id===oldId);
+ const r={id,name:lookup(a,'Modelis / versija','Model / variant'),use:lookup(a,'Kam tinkamas / kodėl atmestas','Suitable use or reason for rejection'),origin:'Importuota · patikrinti',source:relevant.find(p=>p.link)?.link??'',include:false};
+ for(const [k,[names,kind]] of Object.entries(aliases)){
+ const found=relevant.filter(p=>names.includes(String(p.name).trim().toLowerCase())&&pos(p.value)&&units[kind][String(p.unit).trim().toLowerCase()]);
+ if(found.length===1)r[k]=num(found[0].value)*units[kind][String(found[0].unit).trim().toLowerCase()];
+ }
+ if(!r.m&&pos(a['MTOW, kg']))r.m=num(a['MTOW, kg']);
+ const i=rows.findIndex(x=>x.id===id);if(i===-1)rows.push(r);else rows[i]={...rows[i],...r};
+ }
+ const imported=params.map(p=>({...p,id:'IMP-'+p.id}));const key=p=>JSON.stringify(p);registry=[...new Map([...registry,...imported].map(p=>[key(p),p])).values()];
+ }else throw Error('Atpažįstamas ankstesnio demonstratoriaus arba šios analizės JSON.');
+ render();project();$('status').textContent='Importas baigtas. Patikrinkite reikšmes, šaltinius ir įtraukite tinkamus analogus.';
+ }catch(err){$('status').textContent=err.message}finally{e.target.value=''}};
+function download(name,type,text){const u=URL.createObjectURL(new Blob([text],{type}));const a=document.createElement('a');a.href=u;a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(u),3000)}
+function save(){download('analogu_analize.json','application/json',JSON.stringify({schema:'orlaiviu-analogu-analize-v1',rows,registry,ownAnalysis:ownState(),decision:$('decision').value,project:Object.fromEntries(fieldSpec.map(([k])=>[k,$('p-'+k).value]))},null,2))}
+$('save').onclick=$('save2').onclick=save;
+$('csv').onclick=()=>{const cell=v=>{let s=String(v??'');if(/^[=+@-]/.test(s)&&!Number.isFinite(num(s)))s="'"+s;return '"'+s.replace(/"/g,'""')+'"'};
+ const lines=[[...cols.map(([,t])=>t),'AR','W/S, N/m²','P/m, kW/kg','VH','VV'],...rows.filter(r=>r.include).map(r=>[...cols.map(([k])=>r[k]),...Object.values(metrics(r)).map(v=>Number.isFinite(v)?v:'')])];download('analogu_palyginimas.csv','text/csv;charset=utf-8','\uFEFF'+lines.map(r=>r.map(cell).join(';')).join('\r\n'))};
+document.querySelectorAll('[data-copy]').forEach(b=>b.onclick=async()=>{const pre=b.previousElementSibling;try{await navigator.clipboard.writeText(pre.textContent);$('copyStatus').textContent='Užklausa nukopijuota.'}catch{const r=document.createRange();r.selectNodeContents(pre);const s=getSelection();s.removeAllRanges();s.addRange(r);$('copyStatus').textContent='Tekstas pažymėtas. Kopijuokite Ctrl+C.'}});
+
+const ownFields=['question','metric','formula','a','b','conclusion','weight'];
+const prototypeFields=[['name','Prototipas / versija'],['source','Šaltinis / vieta'],['conditions','Palyginimo sąlygos'],['a','A'],['b','B']];
+let prototypes=[];
+const examples=[
+ {question:'Kokio sparno ploto reikia pagal pasirinktą sparno apkrovą?',metric:'W/S, N/m²',formula:'ratio',a:'Svoris W, N',b:'Sparno plotas S, m²',values:[[5883.99,12],[5883.99,15]],conditions:'600 kg masė, vienoda ploto apibrėžtis',conclusion:'Pradinis siekinys 420 N/m². Kai masė 650 kg, S ≈ 15,18 m². Patikrinti pagal misijos greičius ir keliamąją jėgą.'},
+ {question:'Kokią nuolatinę galią priimti pradiniam projektui?',metric:'P/m, kW/kg',formula:'ratio',a:'Galia P, kW',b:'Masė m, kg',values:[[80,650],[95,850],[110,750]],conditions:'Didžiausioji nuolatinė galia',conclusion:'Kai masė 750 kg, 0,12 kW/kg atitinka 90 kW. Tikrinti misijos režimus ir šiluminius apribojimus.'},
+ {question:'Kokios provėžas reikia pagal pasirinktą santykinį rodiklį?',metric:'B/h',formula:'ratio',a:'Provėža B, m',b:'Masės centro aukštis h, m',values:[[1.8,.9],[2.1,1.2]],conditions:'Nurodytos apkrovimo būsenos geometrija',conclusion:'Esant h = 1,1 m ir B/h = 1,9, B = 2,09 m. Tikrinti atramos daugiakampį ir apkrovimo atvejus.'}
+];
+const ownMethods={
+ ratio:['A / B','A ir B – palyginami įvesties dydžiai. B turi būti teigiamas.'],
+ direct:['A','Įveskite palyginamą A dydį. B galima palikti tuščią.'],
+ square:['A² / B','A – sparno mostas, B – sparno plotas. Proilgis yra bedimensis.'],
+ minimum:['100 × (A − B) / B','A – prototipo dydis, B – teigiamas reikalaujamas minimumas. Taikykite tą pačią ribą visiems analogams. Nulis reiškia ribinę atitiktį.'],
+ maximum:['100 × (B − A) / B','A – prototipo dydis, B – teigiamas leistinas maksimumas. Taikykite tą pačią ribą visiems analogams. Nulis reiškia ribinę atitiktį.'],
+ weighted:['w × A + (1 − w) × B','A ir B – kriterijų balai nuo 0 iki 100. Didesnis balas reiškia geresnį rezultatą. Vertinimo skalę bei svorio pagrindimą įrašykite palyginimo sąlygose ir išvadoje.']
+};
+function ownValue(r){
+ const a=num(r.a), b=num(r.b), method=$('own-formula').value;
+ if(method==='direct')return Number.isFinite(a)?a:NaN;
+ if(!Number.isFinite(a)||!Number.isFinite(b))return NaN;
+ if(method==='weighted'){
+   const w=num($('own-weight').value)/100;
+   return w>=0&&w<=1&&a>=0&&a<=100&&b>=0&&b<=100?w*a+(1-w)*b:NaN;
+ }
+ if(b<=0)return NaN;
+ if(method==='minimum')return 100*(a-b)/b;
+ if(method==='maximum')return 100*(b-a)/b;
+ return a>=0?(method==='square'?a*a:a)/b:NaN;
+}
+function ownSummary(){
+ const method=$('own-formula').value;
+ const threshold=method==='minimum'||method==='maximum';
+ $('own-weight-label').hidden=method!=='weighted';
+ $('own-method-help').textContent=ownMethods[method][1];
+ const included=prototypes.filter(r=>r.include);
+ const values=included.map(ownValue).filter(Number.isFinite);
+ prototypes.forEach((r,i)=>{$('own-value-'+i).textContent=fmt(ownValue(r))+(threshold&&Number.isFinite(ownValue(r))?(ownValue(r)>=0?' % · atitinka':' % · neatitinka'):'')});
+ $('own-range').textContent=values.length?
+ 'Apskaičiuota '+values.length+' iš '+included.length+' pažymėtų eilučių. Intervalas '+fmt(values.reduce((a,b)=>Math.min(a,b)))+'–'+fmt(values.reduce((a,b)=>Math.max(a,b)))+(threshold?' %. Atitinka '+values.filter(v=>v>=0).length+' iš '+values.length+'.':'.'):
+ 'Pažymėtose eilutėse kol kas nėra apskaičiuojamų reikšmių.';
+}
+function ownRender(){
+ $('own-table').innerHTML='<thead><tr><th>Įtraukti</th>'+prototypeFields.map(([,label])=>'<th>'+label+'</th>').join('')+'<th>Rezultatas</th><th>Veiksmas</th></tr></thead><tbody>'+prototypes.map((r,i)=>
+ '<tr><td><input type="checkbox" aria-label="Įtraukti '+(i+1)+' eilutę" data-own-row="'+i+'" data-own-key="include" '+(r.include?'checked':'')+'></td>'+
+ prototypeFields.map(([key,label])=>'<td><input aria-label="'+label+', '+(i+1)+' eilutė" size="'+(key==='a'||key==='b'?7:18)+'" data-own-row="'+i+'" data-own-key="'+key+'" value="'+esc(r[key])+'"></td>').join('')+
+ '<td id="own-value-'+i+'"></td><td><button data-own-remove="'+i+'">Pašalinti</button></td></tr>').join('')+'</tbody>';
+ ownSummary();
+}
+function ownState(){
+ return {fields:Object.fromEntries(ownFields.map(k=>[k,$('own-'+k).value])),prototypes};
+}
+function ownRestore(state){
+ for(const key of ownFields) $('own-'+key).value=String(state?.fields?.[key]??(({formula:'ratio',weight:'60'})[key]??''));
+ if(!$('own-formula').value) $('own-formula').value='ratio';
+ prototypes=Array.isArray(state?.prototypes)?state.prototypes.filter(r=>r&&typeof r==='object'):[];
+ ownRender();
+}
+function ownHasWork(){
+ const state=ownState();
+ return prototypes.length||ownFields.some(k=>k!=='formula'&&k!=='weight'&&state.fields[k]);
+}
+function ownCanReplace(){
+ return !ownHasWork()||confirm('Pakeisti dabartinę prototipų analizę? Norėdami ją pasilikti, pirmiau išsaugokite JSON.');
+}
+$('own-add').onclick=()=>{prototypes.push({include:true});ownRender()};
+$('own-new').onclick=()=>{if(ownCanReplace()){ownRestore();$('own-status').textContent='Pradėta nauja analizė.'}};
+$('own-import').onclick=()=>{
+ const known=new Set(prototypes.map(r=>r.originId).filter(Boolean));
+ const incoming=rows.filter(r=>r.name).filter(r=>!known.has(r.id));
+ prototypes.push(...incoming.map(r=>({originId:r.id,name:r.name,source:r.source,conditions:r.use,include:false})));
+ ownRender();
+ $('own-status').textContent='Perimta įrašų: '+incoming.length+'. Užpildykite A ir B ir pažymėkite palyginamas eilutes.';
+};
+$('own-table').oninput=e=>{
+ const {ownRow,ownKey}=e.target.dataset;
+ if(!ownKey)return;
+ prototypes[ownRow][ownKey]=ownKey==='include'?e.target.checked:e.target.value;
+ ownSummary();
+};
+$('own-table').onclick=e=>{
+ const i=e.target.dataset.ownRemove;
+ if(i===undefined)return;
+ prototypes.splice(Number(i),1);
+ ownRender();
+};
+$('own-formula').onchange=ownSummary;
+$('own-weight').oninput=ownSummary;
+document.querySelectorAll('[data-example]').forEach(button=>button.onclick=()=>{
+ if(!ownCanReplace())return;
+ const example=examples[Number(button.dataset.example)];
+ ownRestore({fields:example,prototypes:example.values.map(([a,b],i)=>({
+ name:'Mokomasis analogas '+String.fromCharCode(65+i),source:'Mokomosios prielaidos',conditions:i===2?'Trumpalaikė galia':example.conditions,a,b,include:i!==2
+ }))});
+ $('own-status').textContent='Atverta redaguojama mokomojo pavyzdžio kopija.';
+ show(7);
+});
+$('own-save').onclick=save;
+$('own-file').onchange=e=>{
+ const input=$('file');
+ input.onchange({target:e.target});
+};
+$('own-csv').onclick=()=>{
+ const state=ownState();
+ const safe=value=>{
+   let s=String(value??'');
+   if(/^[\s]*[=+@-]/.test(s)&&!Number.isFinite(num(s)))s="'"+s;
+   return '"'+s.replaceAll('"','""')+'"';
+ };
+ const lines=[
+ ['Projektinis klausimas',state.fields.question],
+ ['Rodiklis',state.fields.metric],
+ ['Skaičiavimas',ownMethods[state.fields.formula][0]],
+ ['A kriterijaus svoris, %',state.fields.formula==='weighted'?state.fields.weight:''],
+ ['Siekinys ir patikra',state.fields.conclusion],
+ [],
+ ['Įtraukta',...prototypeFields.map(([key,label])=>state.fields[key]||label),'Rezultatas'],
+ ...prototypes.map(r=>[r.include?'Taip':'Ne',...prototypeFields.map(([key])=>r[key]),r.include&&Number.isFinite(ownValue(r))?ownValue(r):''])
+ ];
+ download('mano_prototipu_analize.csv','text/csv;charset=utf-8','\uFEFF'+lines.map(line=>line.map(safe).join(';')).join('\r\n'));
+};
+ownRender();
+
+render();project();
+</script></html>
+
+
+
+
+
+
