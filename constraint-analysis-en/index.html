@@ -1,0 +1,197 @@
+<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Aircraft Design Constraint Analysis</title>
+<style>*{box-sizing:border-box}body{margin:0;background:#f5f8fc;color:#20384a;font:16px/1.55 system-ui}main{max-width:1150px;margin:auto;padding:20px}header,section{background:white;border:1px solid #d6e2ef;border-radius:12px;margin-bottom:16px;padding:20px}header{background:#eaf2fb;border-left:5px solid #377ac1}h1,h2,h3{color:#1e4f7a;margin-top:0}button{background:#2868a5;border:0;color:white;padding:8px 14px;border-radius:8px;cursor:pointer;font:inherit}input,select{font:inherit;padding:5px;border:1px solid #a8bed0;border-radius:5px}input[type=number]{width:110px}label{display:inline-block;margin:6px}fieldset{border:1px solid #d6e2ef;margin:12px 0}canvas{width:100%;height:auto}table{border-collapse:collapse;width:100%}td,th{padding:7px;text-align:left;border-bottom:1px solid #d6e2ef}details{background:#eef5fc;padding:12px;border-radius:8px;margin:10px 0}summary{cursor:pointer;font-weight:600}a{color:#245e91}pre{white-space:pre-wrap}.scroll{overflow:auto}.note{background:#eef5fc;padding:12px}.tools{display:flex;gap:8px;flex-wrap:wrap}</style>
+<main><header><h1>Aircraft Design Constraint Analysis</h1><p>Preliminary wing area and powerplant sizing for a propeller-driven aircraft</p></header>
+<section><h2>1. From requirements to calculation inputs</h2><ol>
+<li><a href="../en/">Design Requirements Wizard</a>. Transfer the numerical limits and their IDs from the requirements table. Check whether the takeoff requirement specifies ground roll or distance to clear an obstacle.</li>
+<li><a href="../amphibious-aircraft-en/">Amphibious Aircraft Mission Demonstrator</a>. Transfer cruise true airspeed, air density at cruise altitude, rate of climb and climb TAS from the mission. Use the requirements table to identify which of these values are mandatory.</li>
+<li><strong>Reference Aircraft Analysis Demonstrator</strong>. Import its JSON file. The demonstrator calculates reference aircraft W/S from mass and wing area. Power points appear for selected aircraft with a matching power type and reference condition. Use the aspect ratio of a comparable reference aircraft as a starting value for your design.</li>
+</ol><label>Requirement IDs and input sources <input id="refs" size="42" placeholder="E.g. R-03, R-05, mission phase M-04"></label>
+<label>Reference aircraft analysis JSON <input id="analog-file" type="file" accept=".json,application/json"></label><p id="import-status" role="status"></p><div id="analog-rows"></div></section>
+<section><h2>2. Select a design case and requirements</h2><div class="tools"><button data-case="cessna">Cessna 162 · Gudmundsson worked example</button><button data-case="amphib">Amphibious aircraft · teaching example</button><button data-case="own">My design · starting values</button></div><p id="case-note"></p><details open><summary>How to read the constraint diagram</summary><p>Each point represents a combination of wing loading and power. At a fixed mass, moving to the right reduces wing area because S = W/(W/S). Each curve gives the minimum power needed to meet one requirement at a given wing loading. The feasible region lies above all power curves and to the left of the maximum wing loading. Compare feasible design points by wing area, power and margin.</p></details>
+<details open><summary>How to obtain and justify the inputs</summary><div id="input-provenance"></div>
+<p><b>C<sub>D0</sub></b> is the zero-lift drag coefficient in this simplified polar. The Cessna 162 value of 0.0333 is an assumption from Gudmundsson’s example. For your design, use a drag polar for a comparable configuration or sum the component contributions: C<sub>D0</sub> ≈ Σ(C<sub>f</sub>·FF·Q·S<sub>wet</sub>/S) + ΔC<sub>D0</sub>. Here C<sub>f</sub> is the skin-friction coefficient, FF the form factor, Q the interference factor, S<sub>wet</sub> the wetted area and ΔC<sub>D0</sub> the additional drag contributions. For an amphibious aircraft, evaluate the effect of floats, stepped hull and landing gear as applicable to the chosen configuration. Compare the baseline estimate with two alternatives. <a href="https://www.nasa.gov/reference/openvsp-parasite-drag-tool/">NASA OpenVSP · component build-up method</a></p>
+<p><b>Design wing loading.</b> The Cessna 162 chart is evaluated at 10 lbf/ft² (478.8 N/m²). The aircraft data in the source give 1320 lbf / 120 ft² = 11 lbf/ft² (526.7 N/m²). Start with a range from comparable aircraft, check stall and other W/S limits, and compare wing areas and power margins in the table. Select “Use W/S” to transfer a reference aircraft value.</p></details><details open><summary>Worked calculations for the inputs</summary><p>Each group shows how to derive an input from the starting data. The values are for teaching purposes. Record the source, configuration, operating condition and units for each quantity in your own design. If a value is still uncertain, justify a range and assess its effect on the result.</p><div id="mini-calculations"></div></details><div id="inputs"></div>
+<h3>Calculation method and equations</h3>
+<details open><summary>1. General quantities</summary>
+<p><b>W = mg</b>, <b>X = W/S</b>, <b>q = ρV²/2</b>, <b>K = 1/(πeAR)</b>. Here m is design mass (kg), g = 9.80665 m/s², W is weight (N), S is wing area (m²), X is wing loading (N/m²), ρ is air density for the flight condition (kg/m³), V is true airspeed (m/s), q is dynamic pressure (Pa), AR is wing aspect ratio and e is the Oswald efficiency factor. For wingspan b, <b>AR = b²/S</b>. Reference aircraft wing loading is <b>X<sub>a</sub> = m<sub>a</sub>g/S<sub>a</sub></b>.</p>
+<p>The model assumes a parabolic drag polar <b>C<sub>D</sub> = C<sub>D0</sub> + KC<sub>L</sub>²</b>. At load factor n, <b>C<sub>L</sub> ≈ nX/q</b>, so <b>D/W ≈ qC<sub>D0</sub>/X + Kn²X/q</b>. D is drag. The model uses the same W for all conditions.</p></details>
+<details open><summary>2. Thrust-to-weight ratio by flight condition</summary>
+<div class="scroll"><table><thead><tr><th>Condition</th><th>Required T/W</th><th>Assumptions</th></tr></thead><tbody>
+<tr><td>Cruise</td><td>qC<sub>D0</sub>/X + KX/q</td><td>Constant speed and altitude. Use cruise ρ and V.</td></tr>
+<tr><td>Climb</td><td>qC<sub>D0</sub>/X + KX/q + V<sub>z</sub>/V</td><td>V<sub>z</sub> is the rate of climb (m/s). The model assumes a small flight-path angle and constant TAS.</td></tr>
+<tr><td>Steady level turn</td><td>qC<sub>D0</sub>/X + Kn²X/q, &nbsp; n = 1/cos φ</td><td>φ is the bank angle. The demonstrator uses cruise TAS, density and power conversion factors.</td></tr>
+<tr><td>Takeoff ground roll</td><td>1.21X/(gρC<sub>L,max,TO</sub>s<sub>G</sub>) + 0.605(C<sub>D,TO</sub> − μC<sub>L,TO</sub>)/C<sub>L,max,TO</sub> + μ</td><td>s<sub>G</sub> is ground-roll distance (m), μ is the rolling resistance coefficient, and C<sub>L,TO</sub> and C<sub>D,TO</sub> are the ground-roll lift and drag coefficients. V<sub>S,TO</sub> = √[2X/(ρC<sub>L,max,TO</sub>)] and V<sub>LOF</sub> ≈ 1.1V<sub>S,TO</sub>.</td></tr>
+<tr><td>Service ceiling</td><td>qC<sub>D0</sub>/X + KX/q + V<sub>z,ceil</sub>/V<sub>ceil</sub></td><td>Use density, TAS and the specified residual rate of climb at the service ceiling.</td></tr>
+</tbody></table></div>
+<p><b>Cessna 162 benchmark.</b> X<sub>imp</sub> = X/47.88026 in lbf/ft². At sea level, V<sub>Y</sub> = 0.514444(43.591 + 2.2452X<sub>imp</sub>) m/s. For σ = ρ/ρ₀, the model uses V<sub>ceil</sub> = V<sub>Y</sub>/√σ. Other cases use the entered TAS values.</p></details>
+<details open><summary>3. From thrust to power</summary>
+<p><b>Thrust power</b> is P<sub>T</sub> = TV, where T = (T/W)W. <b>Propeller shaft power</b> is P<sub>prop</sub> = TV/η<sub>p</sub>, where η<sub>p</sub> is propeller efficiency at the operating point. <b>Mechanical motor or engine output</b> is P<sub>mech</sub> = P<sub>prop</sub>/η<sub>drive</sub>, where η<sub>drive</sub> is drivetrain efficiency. With direct drive and negligible coupling losses, these mechanical power values coincide.</p>
+<p>An <b>electric motor</b> delivers mechanical power through its shaft. Motor electrical input power is P<sub>el</sub> = P<sub>mech</sub>/η<sub>motor</sub>. At the inverter’s DC input, P<sub>DC</sub> = P<sub>el</sub>/η<sub>inv</sub>. Estimating battery energy also requires mission phase durations, other electrical loads and the relevant losses.</p>
+<p><b>Worked example.</b> With T = 900 N, V = 50 m/s and η<sub>p</sub> = 0.75, P<sub>T</sub> = 45 kW and P<sub>prop</sub> = 60 kW. With direct drive the motor delivers 60 kW mechanically. At η<sub>motor</sub> = 0.94, the motor requires 63.8 kW of electrical input. At η<sub>inv</sub> = 0.97, the inverter DC input is 65.8 kW. The efficiencies are teaching assumptions.</p>
+<p><b>Diagram reference.</b> The demonstrator defines α<sub>i</sub> = P<sub>prop,available,i</sub>/P<sub>prop,available,0</sub>. For condition i, <b>P<sub>0,i</sub> = (T/W)<sub>i</sub>WV<sub>i</sub>/(1000η<sub>p,i</sub>α<sub>i</sub>)</b> in kW. For the Cessna 162 piston-engine case, α = 1.132(ρ/ρ₀) − 0.132, with ρ₀ = 1.225 kg/m³. For an electric powerplant, determine α from motor, inverter and cooling limits at the operating condition. A preliminary assumption of α = 1 means the available mechanical power equals the reference value.</p>
+<p>At V = 0, TV is zero. Use static propeller performance data to determine static thrust and shaft power. The ground-roll power approximation uses η<sub>p</sub> at liftoff speed.</p></details>
+<details open><summary>4. Wing-loading limits and design point</summary>
+<p><b>Straight-flight stall.</b> X<sub>max,S</sub> = ρ<sub>S</sub>V<sub>S,max</sub>²C<sub>L,max</sub>/2. <b>Turning stall.</b> X<sub>max,turn</sub> = qC<sub>L,max,turn</sub>/n. The direct landing limit uses the entered X<sub>max,land</sub>. The combined limit is <b>X<sub>max</sub> = min(X<sub>max,S</sub>, X<sub>max,turn</sub>, X<sub>max,land</sub>)</b> over the active limits.</p>
+<p><b>Power envelope.</b> P<sub>0,req</sub>(X) = max<sub>i</sub> P<sub>0,i</sub>(X). The T/W chart separately uses max<sub>i</sub>(T/W)<sub>i</sub>. A point meets the active constraints when X ≤ X<sub>max</sub> and P<sub>0,sel</sub> ≥ P<sub>0,req</sub>(X). <b>Wing area</b> is S = W/X. <b>Power margin</b> is ΔP = P<sub>0,sel</sub> − P<sub>0,req</sub>. The sensitivity calculation evaluates 0.9X, X and 1.1X.</p>
+<p>For a reference aircraft with shaft power stated on the same basis as the diagram, <b>P<sub>a,scaled</sub> = P<sub>a</sub>m/m<sub>a</sub></b>. This preserves its power-to-weight ratio while expressing power at the design aircraft mass.</p></details></section>
+<section><h2>3. Constraint diagram and design point</h2><p>The selected power must meet the highest power requirement at the chosen wing loading. Vertical limits set the maximum permissible W/S. Use the table to identify the governing flight condition.</p><p id="error" role="status"></p><canvas id="chart" width="1040" height="475" aria-label="Power versus wing-loading constraint diagram"></canvas><div id="result" aria-live="polite"></div><div class="scroll"><table id="regimes"></table></div><p id="sensitivity"></p><div id="candidates" class="scroll"></div><p id="cd-sensitivity"></p><div class="tools"><button id="save">Save project as JSON</button><button id="csv">Download constraint table as CSV</button><label>Restore project from JSON <input id="restore" type="file" accept=".json,application/json"></label></div></section>
+<section><h2>4. Benchmark and references</h2><details open><summary>Cessna 162 benchmark at 10 lbf/ft²</summary><p>The Cessna 162 case follows the Purdue AAE 451 recalculation based on Gudmundsson’s second edition (2022). Example 3–1 in the 2014 edition (pp. 64–65) uses a different aircraft with a design weight of 2000 lbf. At W/S = 10 lbf/ft² ≈ 478.8 N/m², the approximate benchmark T/W values are 0.187 (ground roll), 0.214 (climb), 0.125 (turn), 0.119 (cruise) and 0.094 (service ceiling). The landing limit is approximately 544.4 N/m². Dynamic pressures and speeds were converted to SI. The turn governs power and climb governs T/W at this point.</p></details><details><summary>Prompt to reproduce the calculation</summary><pre id="prompt">Use my requirement IDs and input table to create a Python calculation in Google Colab using SI units. Plot the individual constraint curves, their upper envelope, the W/S limit and the design point. For each condition, convert thrust to reference shaft power using the true airspeed, propeller efficiency and available power fraction. Compare the design point results with the HTML demonstrator. Flag missing data. Identify the constraint that governs power and describe how varying W/S changes the result.</pre><button id="copy">Copy prompt</button><span id="copy-state" role="status"></span></details><ul><li><a href="https://www.oreilly.com/library/view/general-aviation-aircraft/9780123973085/xhtml/CHP003.html">Gudmundsson, General Aviation Aircraft Design, Chapter 3, §3.2 Constraint Analysis</a></li><li><a href="https://thiagopurdue.github.io/AAE451_Advanced_Design_Notes/constraint-examples/">Purdue AAE 451, Cessna 162 recalculation from Example 3–1 of the 2022 edition</a></li><li><a href="https://www.energy.gov/sites/prod/files/2014/04/f15/10097517.pdf">U.S. Department of Energy, Determining Electric Motor Load and Efficiency</a></li></ul><p>This demonstrator is intended for conceptual design of fixed-wing, propeller-driven aircraft. Water takeoff hydrodynamics, eVTOL hover and transition, and certification compliance require dedicated models and analyses.</p></section></main>
+<script>
+
+const $=id=>document.getElementById(id), g=9.80665, psf=47.88025898, kt=.5144444444, rho0=1.225;
+const specs=[
+ ["General inputs",[["m","Design mass, kg"],["ar","Wing aspect ratio"],["e","Oswald efficiency factor"],["cd","CD₀"],["x","Design W/S, N/m²"],["installed","Selected propeller shaft power at reference conditions, kW"],["axis","Diagram vertical axis","axis"]]],
+ ["Cruise and turn",[["vc","Cruise TAS, m/s"],["rc","Air density, kg/m³"],["ec","Propeller efficiency η"],["ac","Available power fraction α"],["bank","Bank angle, °"],["clt","Maximum CL in turn"]]],
+ ["Climb",[["vy","Climb TAS, m/s"],["roc","Rate of climb, m/s"],["ry","Air density, kg/m³"],["ey","Propeller efficiency η"],["ay","Available power fraction α"]]],
+ ["Takeoff ground roll",[["take","Include ground roll","check"],["roll","Maximum ground-roll distance, m"],["rt","Air density, kg/m³"],["clto","Maximum CL in takeoff configuration"],["clg","Ground-roll CL"],["cdg","Ground-roll CD"],["mu","Rolling resistance coefficient"],["et","Propeller efficiency η at liftoff"],["at","Available power fraction α"]]],
+ ["Service ceiling and landing configuration",[["ceiling","Include service ceiling","check"],["vz","TAS at ceiling, m/s"],["rocz","Residual rate of climb, m/s"],["rz","Air density, kg/m³"],["ez","Propeller efficiency η"],["az","Available power fraction α"],["vs","Maximum stall TAS, m/s"],["rs","Air density for stall limit, kg/m³"],["cls","Maximum CL in landing configuration"],["landing","Additional direct W/S limit, N/m² (0 disables limit)"]]]
+];
+const inputs=specs.flatMap(([,f])=>f);
+const miniCalculations={"m":"120 kg crew + 40 kg payload + 55 kg fuel + 435 kg empty mass = 650 kg. Check the empty mass estimate against comparable aircraft and the mass breakdown.","ar":"With wingspan b = 10.2 m and area S = 13.0 m², AR = 10.2²/13.0 ≈ 8.0. Take both values from the drawing of the same configuration.","e":"A fitted polar C_D ≈ C_D0 + KC_L² with K = 0.0497 gives e = 1/(π·8·0.0497) ≈ 0.80. K is the slope of the fitted line on a plot of C_D against C_L².","cd":"Example component build-up: wing 0.012 + fuselage 0.010 + tail 0.004 + landing gear and other contributions 0.009 = 0.035. Use the same reference area for every contribution. For example, C_f·FF·Q·S_wet/S = 0.004·1.2·1·(32.5/13) = 0.012.","x":"650·9.80665/13.28 ≈ 480 N/m². Compare several wing areas and check the constraint diagram. This is a trial design point.","installed":"An engine delivering 85 kW mechanically provides 85 kW at the propeller shaft with direct drive and η = 1, or 82.45 kW with η = 0.97. Compare ratings for the same operating condition and duration.","axis":"Use the power view for powerplant sizing and the T/W view to compare thrust requirements.","vc":"From the mission: 130 km/h ÷ 3.6 = 36.11 m/s TAS.","rc":"At 600 m in ISA, T ≈ 284.25 K and p ≈ 94.3 kPa. From ρ = p/(287.05·T), ρ ≈ 1.156 kg/m³.","ec":"At 36.11 m/s, 2400 rpm and D = 1.8 m, J = 36.11/(40·1.8) ≈ 0.50. If propeller data give C_T = 0.075 and C_P = 0.050 at this point, η ≈ JC_T/C_P ≈ 0.75.","ac":"If reference power is 85 kW and available cruise power is 80.75 kW, α = 80.75/85 = 0.95.","bank":"For n = 1.103, φ = arccos(1/1.103) ≈ 25°. If specified, use the bank angle in the design brief.","clt":"If a comparable clean-configuration polar gives C_L = 1.50 at stall, enter 1.50. Use a flap setting consistent with the turn condition.","vy":"From the mission: 100 km/h ÷ 3.6 = 27.78 m/s TAS. If the requirement specifies the best rate of climb, justify V_Y using excess power or suitable reference aircraft data.","roc":"Gaining 120 m in 60 s gives an average of 2 m/s. Determine whether the constraint requires maintaining 2 m/s throughout the climb phase.","ry":"At sea level in ISA, 101325/(287.05·288.15) ≈ 1.225 kg/m³.","ey":"For 975 N of thrust at about 27.78 m/s TAS and 41.67 kW of propeller shaft power, η ≈ 975·27.78/41670 ≈ 0.65.","ay":"If 85 kW is available in climb and at the reference condition, α = 1.00.","take":"Enable this constraint when the requirement specifies takeoff ground roll on land. Water takeoff requires a separate hydrodynamic model.","roll":"If the requirement specifies at most 600 m from the start of the roll to liftoff, enter 600 m. If only runway length or obstacle clearance distance is known, justify the ground-roll limit separately.","rt":"ISA sea-level density is 1.225 kg/m³. For another takeoff site, use its air pressure and temperature in ρ = p/(287.05T).","clto":"At 650 kg, S = 13.28 m² and a takeoff-configuration stall speed of about 21.8 m/s TAS at ρ = 1.225 kg/m³, C_L,max ≈ 2mg/(ρV²S) ≈ 1.65. Use a reference aircraft with a comparable takeoff flap setting.","clg":"If a ground-roll model gives L = 1627 N at V = 20 m/s and S = 13.28 m², C_L = L/(0.5·1.225·20²·13.28) ≈ 0.50.","cdg":"If D ≈ 130 N in the same condition, C_D = 130/(0.5·1.225·20²·13.28) ≈ 0.040. Use the ground-roll configuration.","mu":"If test or reference aircraft data give 200 N of rolling resistance at a 5000 N normal load, μ = 200/5000 = 0.04. Specify the runway surface.","et":"At liftoff, if V ≈ 24 m/s, T = 1200 N and propeller shaft power is 48 kW, η ≈ 1200·24/48000 = 0.60. Check the selected propeller operating point.","at":"If 85 kW is available both at takeoff and at the reference condition, α = 1.00. Check how long that power can be sustained.","ceiling":"Enable when a specific altitude and residual rate of climb are required. This constraint is disabled in the amphibious aircraft example.","vz":"For EAS ≈ 28.32 m/s and ρ = 0.85 kg/m³, TAS ≈ 28.32√(1.225/0.85) ≈ 34.0 m/s.","rocz":"For a requirement of 100 ft/min, the SI value is 100·0.3048/60 = 0.508 m/s.","rz":"At ceiling, if p ≈ 69.5 kPa and T ≈ 285 K, ρ ≈ 69500/(287.05·285) ≈ 0.85 kg/m³. Use a consistent atmospheric condition.","ez":"If the propeller chart gives J = 0.65 and C_T/C_P = 1.0 at the operating point, η = 0.65.","az":"If 55.25 kW is available at ceiling and 85 kW at the reference condition, α = 0.65. Use powerplant performance data.","vs":"For a 22 m/s TAS limit at sea level, enter 22. If the manual gives KCAS, convert to m/s first and use consistent airspeed and density references.","rs":"For 22 m/s TAS at sea level in ISA, ρ = 101325/(287.05·288.15) ≈ 1.225 kg/m³.","cls":"Cessna 162 landing example: m ≈ 599 kg, S ≈ 11.15 m² and V_S0 = 40 KCAS ≈ 20.58 m/s EAS for a first estimate. C_L,max ≈ 2·599·9.80665/(1.225·20.58²·11.15) ≈ 2.03. The amphibious aircraft example uses a separate teaching assumption of 1.70. For a justified range of 1.6–2.0 and V_S = 22 m/s, the W/S limit varies from about 474 to 593 N/m².","landing":"If a separate landing analysis gives S ≥ 13 m² at the model design mass of 650 kg, the limit is 650·9.80665/13 ≈ 490 N/m². Enter 0 if no separate limit applies."};
+$('mini-calculations').innerHTML=specs.map(([title,fields],i)=>'<details '+(i===0?'open':'')+'><summary>'+title+'</summary><div class="scroll"><table><thead><tr><th>Input</th><th>How to derive the value</th></tr></thead><tbody>'+fields.map(([key,label])=>'<tr><td>'+label+'</td><td>'+miniCalculations[key]+'</td></tr>').join('')+'</tbody></table></div></details>').join('');
+$('inputs').innerHTML=specs.map(([title,fields])=>'<fieldset><legend>'+title+'</legend>'+fields.map(([k,l,kind])=>'<label>'+l+' '+(kind==='axis'?'<select id="f-axis"><option value="power">Propeller shaft power at reference conditions, kW</option><option value="thrust">T/W by condition</option></select>':'<input id="f-'+k+'" type="'+(kind==='check'?'checkbox':'number')+'" step="any">')+'</label>').join('')+'</fieldset>').join('');
+const base={m:650,ar:8,e:.8,cd:.035,x:480,installed:85,axis:'power',vc:130/3.6,rc:1.156,ec:.75,ac:.95,bank:25,clt:1.5,vy:100/3.6,roc:2,ry:1.225,ey:.65,ay:1,take:true,roll:600,rt:1.225,clto:1.65,clg:.5,cdg:.04,mu:.04,et:.6,at:1,ceiling:false,vz:34,rocz:.508,rz:.85,ez:.65,az:.65,vs:22,rs:1.225,cls:1.7,landing:0};
+const rc=.001869*515.378818, rz=.6292*rho0;
+const cessna={...base,m:1320*.45359237, ar:8,e:.8106,cd:.0333,x:10*psf,installed:100*.745699872,vc:108*kt,rc,ac:1.132*rc/rho0-.132,bank:30,clt:0,vy:(43.591+2.2452*10)*kt,roc:880*.3048/60,roll:640*.3048,clto:1.756,cdg:.038,ceiling:true,vz:(43.591+2.2452*10)*kt/Math.sqrt(.6292),rz,az:1.132*.6292-.132,vs:0,landing:11.37*psf};
+let mode='cessna', analogs=[];
+const notes={cessna:"Cessna 162 · Gudmundsson worked example. Climb and ceiling TAS vary with W/S according to the source relation. Changing either TAS field applies the entered constant value for that condition. The landing W/S limit from the source is enabled. The source gives no maximum CL in turn, so the additional turning-stall limit is disabled.",amphib:"Amphibious aircraft · teaching example. Mission inputs are 130 km/h cruise TAS, 600 m cruise altitude (approximate ISA density), 100 km/h climb TAS, 2 m/s rate of climb and 600 m runway length. This example uses 600 m as the ground-roll limit. Justify that limit separately in your design. Mass, drag polar, stall limit and powerplant inputs are teaching assumptions.",own:"My design · replace all teaching values with documented inputs and enter the requirement IDs."};
+function load(p){
+ for(const [k,,kind] of inputs){const el=$('f-'+k);if(kind==='check')el.checked=p[k];else el.value=roundInput(k,p[k])}
+}
+function read(){
+ return Object.fromEntries(inputs.map(([k,,kind])=>{const el=$('f-'+k);return [k,kind==='check'?el.checked:kind==='axis'?el.value:String(el.value).trim()===''?NaN:Number(el.value)]}));
+}
+function evaluate(p,x){
+ const k=1/(Math.PI*p.ar*p.e), q=(rho,v)=>rho*v*v/2;
+ const drag=(rho,v,n=1)=>{const Q=q(rho,v);return Q*p.cd/x+k*n*n*x/Q};
+ const vy=mode==='cessna'&&(p.vy===cessna.vy||p.vy===roundInput("vy",cessna.vy))?(43.591+2.2452*x/psf)*kt:p.vy;
+ const vz=mode==='cessna'&&(p.vz===cessna.vz||p.vz===roundInput("vz",cessna.vz))?(43.591+2.2452*x/psf)*kt/Math.sqrt(p.rz/rho0):p.vz;
+ const n=1/Math.cos(p.bank*Math.PI/180);
+ const rows=[['Cruise',drag(p.rc,p.vc),p.vc,p.ec,p.ac],
+ ['Climb',drag(p.ry,vy)+p.roc/vy,vy,p.ey,p.ay]];
+ if(p.bank>0)rows.push(['Turn',drag(p.rc,p.vc,n),p.vc,p.ec,p.ac]);
+ if(p.take) rows.push(['Ground roll',1.21*x/(g*p.rt*p.clto*p.roll)+.605*(p.cdg-p.mu*p.clg)/p.clto+p.mu,1.1*Math.sqrt(2*x/(p.rt*p.clto)),p.et,p.at]);
+ if(p.ceiling) rows.push(['Service ceiling',drag(p.rz,vz)+p.rocz/vz,vz,p.ez,p.az]);
+ return rows.map(([name,tw,v,eta,alpha])=>({name,tw,v,power:tw*p.m*g*v/(eta*alpha*1000)}));
+}
+const up=(p)=>Math.min(p.landing||Infinity,p.vs? .5*p.rs*p.vs**2*p.cls:Infinity,p.bank&&p.clt>0? .5*p.rc*p.vc**2*p.clt*Math.cos(p.bank*Math.PI/180):Infinity);
+const fmt=(v,d=1)=>Number.isFinite(v)?v.toLocaleString('en-US',{maximumFractionDigits:d,minimumFractionDigits:d}):'—';
+const max=(r,k)=>r.reduce((a,b)=>a[k]>=b[k]?a:b);
+function valid(p){
+ const active=['m','ar','e','cd','x','installed','vc','rc','ec','ac','vy','ry','ey','ay',...(p.take?['roll','rt','clto','cdg','et','at']:[]),...(p.ceiling?['vz','rz','ez','az']:[]),...(p.vs?['rs','cls']:[])];
+ if(!active.every(k=>Number.isFinite(p[k])&&p[k]>0))return false;
+ const fractions=['e','ec','ac','ey','ay',...(p.take?['et','at']:[]),...(p.ceiling?['ez','az']:[])];
+ return fractions.every(k=>p[k]<=1)&&p.bank>=0&&p.bank<90&&p.vs>=0&&p.landing>=0&&p.clt>=0&&p.roc>=0&&(!p.take||(p.mu>=0&&p.mu<=1&&p.clg>=0&&p.clg<=p.clto&&p.cdg>=p.mu*p.clg))&&(!p.ceiling||p.rocz>=0);
+}
+const colors=['#2868a5','#b76719','#7949a2','#24806a','#a44365'];
+function plot(p,cap){
+ const c=$('chart'),ctx=c.getContext('2d'), l=65,r=1005,t=26,b=380;
+ ctx.clearRect(0,0,c.width,c.height);
+ const xmax=Math.max(p.x*1.25,Number.isFinite(cap)?cap*1.23:0), xmin=Math.min(xmax*.25,p.x*.6,Number.isFinite(cap)?cap*.65:Infinity);
+ const key=p.axis==='thrust'?'tw':'power';
+ const sample=Array.from({length:151},(_,i)=>{const x=xmin+(xmax-xmin)*i/150;return {x,rows:evaluate(p,x)}});
+ const points=key==='power'?analogs.filter(a=>a.show&&a.x>=xmin&&a.x<=xmax&&a.P>0).map(a=>({...a,P:a.P*p.m/a.m})):[];
+ const ymax=1.12*Math.max(...sample.map(a=>max(a.rows,key)[key]),...(key==='power'?[p.installed,...points.map(a=>a.P)]:[]));
+ const X=x=>l+(r-l)*(x-xmin)/(xmax-xmin),Y=y=>b-(b-t)*y/ymax;
+ const line=(points,color,width=2)=>{ctx.strokeStyle=color;ctx.lineWidth=width;ctx.beginPath();points.forEach(([x,y],i)=>i?ctx.lineTo(X(x),Y(y)):ctx.moveTo(X(x),Y(y)));ctx.stroke()};
+ ctx.font='13px system-ui';ctx.fillStyle='#20384a';
+ for(let i=0;i<=5;i++){const y=ymax*i/5,x=xmin+(xmax-xmin)*i/5;line([[xmin,y],[xmax,y]],'#dbe6ee',1);ctx.fillStyle='#20384a';ctx.fillText(fmt(y,key==='power'?0:2),8,Y(y)+4);ctx.fillText(fmt(x,0),X(x)-15,b+20)}
+ const feasible=sample.filter(a=>a.x<=cap);
+ if(feasible.length>1){ctx.beginPath();ctx.moveTo(X(feasible[0].x),t);feasible.forEach(a=>ctx.lineTo(X(a.x),Y(max(a.rows,key)[key])));ctx.lineTo(X(feasible.at(-1).x),t);ctx.closePath();ctx.fillStyle='#dcefe8';ctx.fill()}
+ line([[xmin,0],[xmax,0]],'#20384a');
+ sample[0].rows.forEach((row,i)=>{line(sample.map(a=>[a.x,a.rows[i][key]]),colors[i]);ctx.fillStyle=colors[i];ctx.fillText(row.name,l+i*154,442)});
+ line(sample.map(a=>[a.x,max(a.rows,key)[key]]),'#20384a',3);
+ if(Number.isFinite(cap)&&cap>=xmin){line([[cap,0],[cap,ymax]],'#ad3434');ctx.fillStyle='#ad3434';ctx.fillText('W/S limit',X(cap)+6,20)}
+ function mark(x,y,label,color){ctx.fillStyle=color;ctx.beginPath();ctx.arc(X(x),Y(y),5,0,2*Math.PI);ctx.fill();ctx.fillText(label,X(x)+9,Y(y)-6)}
+ points.forEach(a=>mark(a.x,a.P,a.name,'#66532e'));
+ if(p.x>=xmin)mark(p.x,key==='power'?p.installed:max(evaluate(p,p.x),key)[key],key==='power'?'Selected power':'Required T/W','#111827');
+ ctx.fillStyle='#20384a';ctx.fillText('W/S, N/m²',r-74,b+42);ctx.fillText(key==='power'?'P₀, kW':'T/W',8,16);ctx.fillText('Green region · meets active constraints',l,465);
+}
+function render(){
+ const p=read();showOrigins(p);
+ if(!valid(p)){$('candidates').innerHTML='';$('cd-sensitivity').textContent='';$('error').textContent='Check the active inputs, efficiencies and available power fractions.';$('chart').hidden=true;$('result').textContent='';$('regimes').innerHTML='';$('sensitivity').textContent='';$('csv').disabled=true;return}
+ $('error').textContent='';$('chart').hidden=false;$('csv').disabled=false;
+ const cap=up(p),rows=evaluate(p,p.x), demanding=max(rows,'power');
+ plot(p,cap);showCandidates(p,cap);
+ $('result').textContent='Wing area: '+fmt(p.m*g/p.x,2)+' m². Required shaft power at sea-level reference: '+fmt(demanding.power)+' kW. Governing condition: '+demanding.name.toLowerCase()+'. Power margin: '+fmt(p.installed-demanding.power)+' kW. '+(Number.isFinite(cap)?'W/S limit: '+fmt(cap)+' N/m². ':'No W/S limit is set. ')+(p.x<=cap&&p.installed>=demanding.power?'The point meets all active constraints.':'The point falls outside at least one active constraint.');
+ $('regimes').innerHTML='<thead><tr><th>Condition</th><th>TAS, m/s</th><th>T/W</th><th>P₀, kW</th></tr></thead><tbody>'+rows.map(row=>'<tr><td>'+row.name+'</td><td>'+fmt(row.v)+'</td><td>'+fmt(row.tw,3)+'</td><td>'+fmt(row.power)+'</td></tr>').join('')+'</tbody>';
+ $('sensitivity').textContent='Wing-loading sensitivity. '+[.9,1,1.1].map(f=>{const x=p.x*f,r=max(evaluate(p,x),'power');return fmt(x,0)+' N/m² → '+fmt(r.power)+' kW ('+r.name.toLowerCase()+(x>cap?', above the W/S limit':'')+')'}).join(' · ');
+}
+document.querySelectorAll('[data-case]').forEach(b=>b.onclick=()=>{mode=b.dataset.case;load(mode==='cessna'?cessna:base);$('case-note').textContent=notes[mode];render()});
+$('inputs').oninput=render;
+const number=v=>typeof v==='number'?v:typeof v==='string'&&v.trim()?Number(v.replace(',','.')):NaN;
+function getAnalogs(data){
+ if(data.schema!=='orlaiviu-analogu-analize-v1'||!Array.isArray(data.rows))throw Error('Select a reference aircraft analysis JSON file.');
+ return data.rows.filter(r=>r&&r.include!==false&&number(r.S)>0&&number(r.m)>0).map(r=>({name:String(r.name??r.id??'Reference aircraft'),mode:String(r.mode??''),x:number(r.m)*g/number(r.S),m:number(r.m),P:number(r.P),ar:number(r.b)**2/number(r.S),show:false}));
+}
+function renderAnalogs(){
+ const host=$('analog-rows');host.replaceChildren();
+ analogs.forEach(a=>{
+ const p=document.createElement('p');p.textContent=a.name+' · W/S '+fmt(a.x)+' N/m² · aspect ratio '+fmt(a.ar,2)+' · power '+fmt(a.P)+' kW · '+(a.mode||'power reference unspecified')+' ';
+ const use=document.createElement('button');use.textContent='Use W/S';use.onclick=()=>{$('f-x').value=a.x;render()};p.append(use);
+ if(a.ar>0){const ar=document.createElement('button');ar.textContent='Use aspect ratio';ar.onclick=()=>{$('f-ar').value=a.ar;render()};p.append(' ',ar)}
+ if(a.P>0&&a.mode){const label=document.createElement('label'),check=document.createElement('input');check.type='checkbox';check.checked=a.show;check.onchange=()=>{a.show=check.checked;render()};label.append(check,' Power type and reference conditions match');p.append(label)}
+ host.append(p);
+ });
+}
+$('analog-file').onchange=async e=>{try{const file=e.target.files[0];if(!file)return;analogs=getAnalogs(JSON.parse((await file.text()).replace(/^\uFEFF/,'')));renderAnalogs();render();$('import-status').textContent='Records with valid mass and wing area: '+analogs.length+'. Power comparison points use the reference aircraft P/W scaled to the design mass.'}catch(err){$('import-status').textContent=err.message}finally{e.target.value=''}};
+function download(name,type,data){const url=URL.createObjectURL(new Blob([data],{type})),a=document.createElement('a');a.href=url;a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(url),3000)}
+$('save').onclick=()=>download('aircraft_constraint_analysis.json','application/json',JSON.stringify({schema:'projektiniu-apribojimu-analize-v1',mode,refs:$('refs').value,parameters:read(),analogs},null,2));
+$('restore').onchange=async e=>{try{const f=e.target.files[0];if(!f)return;const d=JSON.parse(await f.text());if(d.schema!=='projektiniu-apribojimu-analize-v1'||!d.parameters||!Object.hasOwn(notes,d.mode))throw Error('Invalid project JSON file.');mode=d.mode;load({...base,...d.parameters});$('case-note').textContent=notes[mode];$('refs').value=String(d.refs??'');analogs=Array.isArray(d.analogs)?d.analogs.filter(a=>a&&typeof a==='object'):[];renderAnalogs();render()}catch(err){$('error').textContent=err.message}finally{e.target.value=''}};
+$('csv').onclick=()=>{const p=read(),rows=evaluate(p,p.x);download('aircraft_constraints.csv','text/csv;charset=utf-8','\uFEFFCondition;W/S (N/m²);TAS (m/s);T/W;P0 (kW)\r\n'+rows.map(a=>[a.name,p.x.toFixed(2),a.v.toFixed(3),a.tw.toFixed(5),a.power.toFixed(3)].join(';')).join('\r\n'))};
+$('copy').onclick=async()=>{try{await navigator.clipboard.writeText($('prompt').textContent);$('copy-state').textContent=' Prompt copied.'}catch{const range=document.createRange();range.selectNodeContents($('prompt'));getSelection().removeAllRanges();getSelection().addRange(range);$('copy-state').textContent=' Copy the selected text.'}};
+
+const origins={
+m:["Mass equivalent of 1320 lb, converted to kg","650 kg teaching assumption","Preliminary mass breakdown or estimate from comparable aircraft"],
+ar:["Wingspan aspect ratio from the worked example","Teaching assumption","From b²/S or comparable aircraft"],
+e:["Drag-polar parameter from the worked example","Teaching assumption","From a reference aircraft polar, wing geometry or aerodynamic model"],
+cd:["Gudmundsson assumption for C_D,min in this polar","Teaching assumption for the configuration","From a polar or component drag build-up"],
+x:["10 lbf/ft², chart evaluation point","Teaching example design point","From the reference aircraft range and the constraint diagram"],
+installed:["100 hp × 0.7457, comparison power rating","Teaching assumption for selected power","From powerplant data at reference conditions"],
+axis:["Display option","Display option","Select the thrust or power diagram"],
+vc:["108 kt TAS","130 km/h from the mission","From the mission or speed requirement"],
+rc:["0.001869 slug/ft³ converted to SI","Approximate ISA density at 600 m","From cruise altitude and temperature"],
+ec:["Purdue recalculation assumption","Teaching assumption","From propeller data at the operating point"],
+ac:["Gagg and Ferrar power model","Teaching assumption","Divide power available in cruise by reference power"],
+bank:["30° requirement in the worked example","Teaching assumption","From the manoeuvre requirement"],
+clt:["0 disables the limit, value unspecified in the source","Teaching assumption","From aerodynamic data for the turn configuration"],
+vy:["Worked-example relation at 10 lbf/ft²","100 km/h from the mission","From climb analysis or the requirement"],
+roc:["880 ft/min converted to SI","2 m/s from the mission","From the climb requirement"],
+ry:["Sea-level reference density","Teaching example sea-level density","From atmospheric conditions in climb"],
+ey:["Purdue recalculation assumption","Teaching assumption","From propeller data for climb"],
+ay:["Sea-level reference","Full reference power assumed available","From power available in climb"],
+take:["Ground-roll constraint included in the worked example","Teaching example uses takeoff on land","Enable if a ground-roll limit applies"],
+roll:["640 ft converted to SI","600 m runway length used as the teaching example ground-roll limit","From the ground-roll requirement"],
+rt:["Sea-level reference density","Teaching example sea-level density","From atmospheric conditions at the takeoff site"],
+clto:["Input from the worked example","Teaching assumption","From the takeoff-configuration polar or tests"],
+clg:["Input from the worked example","Teaching assumption","From a representative ground-roll condition"],
+cdg:["Input from the worked example","Teaching assumption","From ground-roll configuration and CL"],
+mu:["Input from the worked example","Teaching assumption","From runway surface and landing gear"],
+et:["Purdue assumption at liftoff","Teaching assumption","From propeller data at liftoff speed"],
+at:["Sea-level reference","Full reference power assumed available","From power available at takeoff"],
+ceiling:["Service ceiling constraint enabled","Constraint disabled","Enable if specified by the mission or requirements"],
+vz:["Worked-example VY scaled by density ratio","Teaching value for the disabled condition","From climb analysis at ceiling altitude"],
+rocz:["100 ft/min converted to SI","Teaching value for the disabled condition","From the project definition of service ceiling"],
+rz:["Density ratio 0.6292 × sea-level density","Teaching value for the disabled condition","From atmospheric conditions at ceiling altitude"],
+ez:["Purdue recalculation assumption","Teaching value for the disabled condition","From propeller data at ceiling altitude"],
+az:["Gagg and Ferrar power model","Teaching value for the disabled condition","From available power at ceiling altitude"],
+vs:["0 disables the separate speed limit","Teaching example stall speed limit","From requirements, checking the airspeed type"],
+rs:["Inactive with speed limit disabled","Teaching example sea-level density","From the condition for the stated TAS"],
+cls:["Inactive with speed limit disabled","Teaching assumption","From landing-configuration aerodynamic data"],
+landing:["11.37 lbf/ft², landing limit from the source","0 disables the direct landing limit","From a separate landing analysis"]
+};
+const roundInput=(k,v)=>typeof v==='number'?Number(v.toFixed(['m','x','installed','roll','landing','vc','vy','vz'].includes(k)?2:4)):v;
+function showOrigins(p){
+ const demo=mode==='cessna'?cessna:base;
+ $('input-provenance').innerHTML='<div class="scroll"><table><thead><tr><th>Input</th><th>Starting value</th><th>Source</th><th>How to determine for your design</th></tr></thead><tbody>'+inputs.map(([k,label,kind])=>'<tr><td>'+label+'</td><td>'+(kind==='check'?(demo[k]?'Yes':'No'):kind==='axis'?'Power':fmt(roundInput(k,demo[k]),['m','x','installed','roll','landing','vc','vy','vz'].includes(k)?2:4))+'</td><td>'+(mode==='own'?'Teaching example input':origins[k][mode==='cessna'?0:1])+'</td><td>'+origins[k][2]+'</td></tr>').join('')+'</tbody></table></div>';
+}
+function showCandidates(p,cap){
+ $('candidates').innerHTML='<h3>Design point comparison</h3><table><tr><th>W/S (N/m²)</th><th>S (m²)</th><th>Required power (kW)</th><th>Margin (kW)</th><th>Governing condition</th><th>Feasibility</th></tr>'+[.9,1,1.1].map(f=>{const x=p.x*f, r=max(evaluate(p,x),'power'); return '<tr><td>'+fmt(x)+'</td><td>'+fmt(p.m*g/x,2)+'</td><td>'+fmt(r.power)+'</td><td>'+fmt(p.installed-r.power)+'</td><td>'+r.name+'</td><td>'+(x<=cap&&p.installed>=r.power?'Feasible':'Outside constraints')+'</td></tr>'}).join('')+'</table>';
+ const deltas=[.8,1,1.2].map(f=>{const d=p.cd*f,r=max(evaluate({...p,cd:d},p.x),'power');return 'CD₀ '+fmt(d,4)+' → '+fmt(r.power)+' kW ('+r.name.toLowerCase()+')'});
+ $('cd-sensitivity').textContent='CD₀ sensitivity (±20% for illustration, all other inputs held constant). '+deltas.join(' · ');
+}
+
+load(cessna);$('case-note').textContent=notes[mode];render();
+
+</script>
+</html>
